@@ -1,0 +1,20 @@
+:root {
+  --bg: #f8f6f1;
+  --fg: #1f2a20;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
+  background: radial-gradient(circle at 15% 20%, #fff3d9 0%, var(--bg) 45%, #e5efe4 100%);
+  color: var(--fg);
+}
+
+main {
+  min-height: 100svh;
+  padding: 2rem;
+}

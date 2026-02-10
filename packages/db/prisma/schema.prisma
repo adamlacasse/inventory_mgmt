@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id              String        @id @default(cuid())
+  productName     String
+  productCategory String
+  lotNumber       String
+  createdAt       DateTime      @default(now())
+  intakeItems     IntakeItem[]
+  outtakeItems    OuttakeItem[]
+
+  @@unique([productName, productCategory, lotNumber])
+}
+
+model IntakeTransaction {
+  id        String       @id @default(cuid())
+  date      DateTime
+  notes     String?
+  saved     Boolean      @default(false)
+  createdAt DateTime     @default(now())
+  items     IntakeItem[]
+}
+
+model IntakeItem {
+  id                  String            @id @default(cuid())
+  intakeTransactionId String
+  productId           String
+  units               Decimal
+  intakeTransaction   IntakeTransaction @relation(fields: [intakeTransactionId], references: [id], onDelete: Restrict)
+  product             Product           @relation(fields: [productId], references: [id], onDelete: Restrict)
+}
+
+model OuttakeTransaction {
+  id        String        @id @default(cuid())
+  date      DateTime
+  customer  String?
+  notes     String?
+  saved     Boolean       @default(false)
+  createdAt DateTime      @default(now())
+  items     OuttakeItem[]
+}
+
+model OuttakeItem {
+  id                   String             @id @default(cuid())
+  outtakeTransactionId String
+  productId            String
+  units                Decimal
+  outtakeTransaction   OuttakeTransaction @relation(fields: [outtakeTransactionId], references: [id], onDelete: Restrict)
+  product              Product            @relation(fields: [productId], references: [id], onDelete: Restrict)
+}
