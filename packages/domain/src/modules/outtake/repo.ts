@@ -1,3 +1,5 @@
+import type { OuttakeDraftTransaction } from "./schema";
+
 export interface OuttakeRepository {
-  save(): Promise<void>;
+  save(transaction: OuttakeDraftTransaction): Promise<void>;
 }
