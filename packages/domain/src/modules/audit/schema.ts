@@ -1,6 +1,8 @@
 import { z } from "zod";
 
-export const transactionLockSchema = z.object({
-  transactionId: z.string().min(1),
-  saved: z.boolean(),
+export const transactionLockStateSchema = z.object({
+  transactionId: z.string().trim().min(1),
+  locked: z.boolean(),
 });
+
+export type TransactionLockState = z.infer<typeof transactionLockStateSchema>;
