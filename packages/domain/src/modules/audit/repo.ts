@@ -1,3 +1,4 @@
 export interface AuditRepository {
-  updateLockState(transactionId: string, saved: boolean): Promise<void>;
+  getLockState(transactionId: string): Promise<boolean>;
+  setLockState(transactionId: string, locked: boolean): Promise<void>;
 }
