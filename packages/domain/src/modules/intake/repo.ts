@@ -1,3 +1,5 @@
+import type { IntakeDraftTransaction } from "./schema";
+
 export interface IntakeRepository {
-  save(): Promise<void>;
+  save(transaction: IntakeDraftTransaction): Promise<void>;
 }
