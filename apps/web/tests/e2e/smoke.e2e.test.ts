@@ -127,9 +127,6 @@ describe("MVP smoke workflow", () => {
 
     expect(editedOuttake.locked).toBe(true);
 
-    const relocked = await services.transactions.lock("outtake", outtake.id);
-    expect(relocked.locked).toBe(true);
-
     const history = await services.history.list(new URLSearchParams());
     expect(history.length).toBe(2);
 

@@ -3,11 +3,18 @@ import { type InventoryFilters, getInventorySnapshot } from "./inventory";
 
 function csvEscape(value: string | number): string {
   const stringValue = String(value);
-  if (stringValue.includes(",") || stringValue.includes('"') || stringValue.includes("\n")) {
-    return `"${stringValue.replaceAll('"', '""')}"`;
+
+  // Prevent formula injection
+  const injectionChars = ["=", "+", "-", "@", "\t", "\r"];
+  const safeValue = injectionChars.some((char) => stringValue.startsWith(char))
+    ? `'${stringValue}`
+    : stringValue;
+
+  if (safeValue.includes(",") || safeValue.includes('"') || safeValue.includes("\n")) {
+    return `"${safeValue.replaceAll('"', '""')}"`;
   }
 
-  return stringValue;
+  return safeValue;
 }
 
 export async function exportInventoryCsv(client: PrismaClient, filters: InventoryFilters = {}) {

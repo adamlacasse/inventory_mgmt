@@ -1,5 +1,6 @@
 import type { PrismaClient } from "@prisma/client";
 import { ApiError } from "./errors";
+import { ensureInventoryAvailable } from "./outtake";
 
 export type TransactionType = "intake" | "outtake";
 
@@ -51,9 +52,17 @@ function toDateFilter(filters: HistoryFilters): { gte?: Date; lte?: Date } | und
     return undefined;
   }
 
+  const gte = hasStartDate ? parseDate(startDate, "startDate") : undefined;
+
+  let lte: Date | undefined;
+  if (hasEndDate) {
+    lte = parseDate(endDate, "endDate");
+    lte.setHours(23, 59, 59, 999);
+  }
+
   return {
-    ...(hasStartDate ? { gte: parseDate(startDate, "startDate") } : {}),
-    ...(hasEndDate ? { lte: parseDate(endDate, "endDate") } : {}),
+    ...(gte ? { gte } : {}),
+    ...(lte ? { lte } : {}),
   };
 }
 
@@ -86,6 +95,37 @@ export async function setTransactionLockState(
   }
 
   if (type === "outtake") {
+    if (locked) {
+      await client.$transaction(async (tx) => {
+        const transaction = await tx.outtakeTransaction.findUnique({
+          where: { id },
+          include: { items: true },
+        });
+
+        if (!transaction) {
+          throw new ApiError("TRANSACTION_NOT_FOUND", 404, "Transaction not found.");
+        }
+
+        const lineItems = transaction.items.map((item) => ({
+          productId: item.productId,
+          units: Number(item.units),
+        }));
+
+        await ensureInventoryAvailable(tx, lineItems);
+
+        await tx.outtakeTransaction.update({
+          where: { id },
+          data: { saved: true },
+        });
+      });
+
+      return {
+        id,
+        type,
+        locked: true,
+      };
+    }
+
     const updated = await client.outtakeTransaction.update({
       where: {
         id,

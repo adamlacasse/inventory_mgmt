@@ -99,7 +99,15 @@ function sumRequestedUnits(lineItems: OuttakeLineItemInput[]): Map<string, numbe
   }, new Map<string, number>());
 }
 
-async function ensureProductsExist(client: PrismaClient, lineItems: OuttakeLineItemInput[]) {
+type TransactionClient = Omit<
+  PrismaClient,
+  "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends"
+>;
+
+async function ensureProductsExist(
+  client: PrismaClient | TransactionClient,
+  lineItems: OuttakeLineItemInput[],
+) {
   const uniqueProductIds = [...new Set(lineItems.map((lineItem) => lineItem.productId))];
   const products = await client.product.findMany({
     where: {
@@ -119,11 +127,15 @@ async function ensureProductsExist(client: PrismaClient, lineItems: OuttakeLineI
   }
 }
 
-async function ensureInventoryAvailable(client: PrismaClient, lineItems: OuttakeLineItemInput[]) {
+export async function ensureInventoryAvailable(
+  client: PrismaClient | TransactionClient,
+  lineItems: OuttakeLineItemInput[],
+  excludeTransactionId?: string,
+) {
   const requestedUnitsByProduct = sumRequestedUnits(lineItems);
 
   for (const [productId, requestedUnits] of requestedUnitsByProduct) {
-    const unitsOnHand = await getUnitsOnHandByProduct(client, productId);
+    const unitsOnHand = await getUnitsOnHandByProduct(client, productId, excludeTransactionId);
     if (requestedUnits > unitsOnHand) {
       throw new ApiError(
         "OUTTAKE_INSUFFICIENT_INVENTORY",
@@ -144,7 +156,10 @@ function ensureUnlocked(saved: boolean, id: string) {
   }
 }
 
-async function readOuttakeTransaction(client: PrismaClient, outtakeTransactionId: string) {
+async function readOuttakeTransaction(
+  client: PrismaClient | TransactionClient,
+  outtakeTransactionId: string,
+) {
   const transaction = await client.outtakeTransaction.findUnique({
     where: {
       id: outtakeTransactionId,
@@ -232,24 +247,26 @@ export function parseUpdateOuttakeInput(payload: unknown): UpdateOuttakeInput {
 }
 
 export async function createOuttakeTransaction(client: PrismaClient, input: CreateOuttakeInput) {
-  await ensureProductsExist(client, input.lineItems);
-  if (input.save ?? true) {
-    await ensureInventoryAvailable(client, input.lineItems);
-  }
+  return client.$transaction(async (tx) => {
+    await ensureProductsExist(tx, input.lineItems);
+    if (input.save ?? true) {
+      await ensureInventoryAvailable(tx, input.lineItems);
+    }
 
-  const created = await client.outtakeTransaction.create({
-    data: {
-      date: input.date,
-      customer: input.customer ?? null,
-      notes: input.notes ?? null,
-      saved: input.save ?? true,
-      items: {
-        create: input.lineItems,
+    const created = await tx.outtakeTransaction.create({
+      data: {
+        date: input.date,
+        customer: input.customer ?? null,
+        notes: input.notes ?? null,
+        saved: input.save ?? true,
+        items: {
+          create: input.lineItems,
+        },
       },
-    },
-  });
+    });
 
-  return readOuttakeTransaction(client, created.id);
+    return readOuttakeTransaction(tx, created.id);
+  });
 }
 
 export async function updateOuttakeTransaction(
@@ -284,14 +301,15 @@ export async function updateOuttakeTransaction(
         units: Number(item.units),
       }));
 
+  const nextSaved = input.save ?? existing.saved;
+
   await ensureProductsExist(client, nextLineItems);
 
-  const nextSaved = input.save ?? existing.saved;
-  if (nextSaved) {
-    await ensureInventoryAvailable(client, nextLineItems);
-  }
-
   await client.$transaction(async (tx) => {
+    if (nextSaved) {
+      await ensureInventoryAvailable(tx, nextLineItems, id);
+    }
+
     await tx.outtakeTransaction.update({
       where: {
         id,

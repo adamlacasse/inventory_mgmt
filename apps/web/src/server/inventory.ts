@@ -20,9 +20,15 @@ function normalize(value: string | undefined): string {
   return (value ?? "").trim().toLowerCase();
 }
 
+type TransactionClient = Omit<
+  PrismaClient,
+  "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends"
+>;
+
 export async function getUnitsOnHandByProduct(
-  client: PrismaClient,
+  client: PrismaClient | TransactionClient,
   productId: string,
+  excludeOuttakeTransactionId?: string,
 ): Promise<number> {
   const [intake, outtake] = await Promise.all([
     client.intakeItem.aggregate({
@@ -41,6 +47,7 @@ export async function getUnitsOnHandByProduct(
         productId,
         outtakeTransaction: {
           saved: true,
+          ...(excludeOuttakeTransactionId ? { NOT: { id: excludeOuttakeTransactionId } } : {}),
         },
       },
       _sum: {
