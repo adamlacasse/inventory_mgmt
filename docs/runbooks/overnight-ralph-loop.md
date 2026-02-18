@@ -9,7 +9,7 @@ Run a bounded overnight delivery loop that continues task execution while protec
 - `main` is clean before starting.
 - Task files are present in `tasks/` with clear acceptance criteria.
 - Dependencies are installed (`pnpm install`).
-- Environment is configured (`.env` from `.env.example`).
+- Environment is configured (`apps/web/.env.local` from `apps/web/.env.example`).
 
 ## Suggested Task Order
 

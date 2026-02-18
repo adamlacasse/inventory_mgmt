@@ -18,7 +18,7 @@ The current seed file is a scaffold log statement, and DB status checks fail wit
 
 - `packages/db/src/seed.ts`
 - `docs/runbooks/local-dev.md`
-- `.env.example`
+- `apps/web/.env.example`
 
 ## Acceptance Criteria
 

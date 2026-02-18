@@ -11,7 +11,7 @@
 corepack enable
 corepack prepare pnpm@9.15.0 --activate
 pnpm install
-cp .env.example .env
+cp apps/web/.env.example apps/web/.env.local
 pnpm --filter @inventory/db db:generate
 ```
 
