@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Cannabis Inventory",
-  description: "Inventory management scaffold",
+  description: "Inventory management MVP for intake, outtake, inventory, and audit history",
 };
 
 export default function RootLayout({

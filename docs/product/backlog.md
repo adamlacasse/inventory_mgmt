@@ -1,15 +1,25 @@
 # Product Backlog
 
-## MVP (Prototype)
+## MVP Must Have
 
-- [ ] Intake transaction creation with line items
-- [ ] Outtake transaction creation with inventory guardrails
-- [ ] Transaction lock/unlock flow
-- [ ] Current inventory table with filters
-- [ ] Basic CSV export
+- [x] Intake transaction creation with line items
+- [x] Outtake transaction creation with inventory guardrails
+- [x] Transaction lock/unlock flow
+- [x] Current inventory table with filters
+- [x] Product master list (add/edit/view)
+- [x] Transaction history view
+- [x] Basic CSV export of current inventory
+- [x] Seeded local demo flow and runnable setup commands
+- [x] E2E smoke coverage for core workflow
 
 ## Post-MVP
 
 - [ ] Low stock alerts
 - [ ] Multi-user audit metadata
 - [ ] Ninox migration import script
+
+## Deferred
+
+- [ ] POS integration
+- [ ] Cost/value reporting
+- [ ] Automated compliance reporting exports

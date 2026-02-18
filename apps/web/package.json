@@ -6,12 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "biome check .",
+    "lint": "biome check app src tests package.json tsconfig.json next.config.ts",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --passWithNoTests",
-    "test:e2e": "node -e \"console.log('No E2E suite yet for @inventory/web')\""
+    "test": "vitest run src --passWithNoTests",
+    "test:e2e": "DATABASE_URL=file:./e2e.db vitest run tests/e2e/smoke.e2e.test.ts --passWithNoTests=false"
   },
   "dependencies": {
+    "@prisma/client": "6.3.0",
     "next": "15.1.6",
     "react": "19.0.0",
     "react-dom": "19.0.0"
