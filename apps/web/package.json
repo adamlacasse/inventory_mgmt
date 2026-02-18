@@ -12,6 +12,8 @@
     "test:e2e": "DATABASE_URL=file:./e2e.db vitest run tests/e2e/smoke.e2e.test.ts --passWithNoTests=false"
   },
   "dependencies": {
+    "@libsql/client": "0.8.1",
+    "@prisma/adapter-libsql": "6.3.0",
     "@prisma/client": "6.3.0",
     "next": "15.1.6",
     "react": "19.0.0",

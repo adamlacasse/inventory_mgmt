@@ -9,6 +9,7 @@
     "db:migrate:status": "DATABASE_URL=file:./dev.db prisma validate --schema prisma/schema.prisma",
     "db:generate": "prisma generate --schema prisma/schema.prisma",
     "db:migrate:dev": "prisma migrate dev --schema prisma/schema.prisma",
+    "db:turso:bootstrap": "sh -c 'unset DATABASE_URL; prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > /tmp/inventory-mvp.sql'",
     "db:seed": "DATABASE_URL=${DATABASE_URL:-file:./dev.db} node --import tsx src/seed.ts"
   },
   "dependencies": {

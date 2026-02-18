@@ -1,6 +1,8 @@
-import { PrismaClient } from "@prisma/client";
 import fs from "node:fs";
 import path from "node:path";
+import { createClient } from "@libsql/client";
+import { PrismaLibSQL } from "@prisma/adapter-libsql";
+import { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = globalThis as { prisma?: PrismaClient };
 
@@ -56,13 +58,27 @@ function resolveDatabaseUrl(): string | undefined {
 }
 
 const databaseUrl = resolveDatabaseUrl();
+const libsqlUrl = databaseUrl?.startsWith("libsql:") ? databaseUrl : undefined;
+
+const prismaClient = libsqlUrl
+  ? new PrismaClient({
+      adapter: new PrismaLibSQL(
+        createClient({
+          url: libsqlUrl,
+          ...(process.env.DATABASE_AUTH_TOKEN
+            ? { authToken: process.env.DATABASE_AUTH_TOKEN }
+            : {}),
+        }),
+      ),
+      log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
+    })
+  : new PrismaClient({
+      ...(databaseUrl ? { datasources: { db: { url: databaseUrl } } } : {}),
+      log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
+    });
 
 export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    ...(databaseUrl ? { datasources: { db: { url: databaseUrl } } } : {}),
-    log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
-  });
+  globalForPrisma.prisma ?? prismaClient;
 
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
