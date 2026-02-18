@@ -111,7 +111,7 @@ export async function setTransactionLockState(
           units: Number(item.units),
         }));
 
-        await ensureInventoryAvailable(tx, lineItems);
+        await ensureInventoryAvailable(tx, lineItems, id);
 
         await tx.outtakeTransaction.update({
           where: { id },
