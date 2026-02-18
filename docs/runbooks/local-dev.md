@@ -12,6 +12,10 @@ corepack enable
 corepack prepare pnpm@9.15.0 --activate
 pnpm install
 cp apps/web/.env.example apps/web/.env.local
+cat <<'EOF' > packages/db/.env
+DATABASE_URL=file:./dev.db
+EOF
+pnpm --filter @inventory/db db:migrate:dev
 pnpm --filter @inventory/db db:generate
 ```
 

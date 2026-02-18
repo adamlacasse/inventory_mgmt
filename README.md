@@ -42,4 +42,4 @@ cp apps/web/.env.example apps/web/.env.local
 pnpm dev
 ```
 
-See `docs/runbooks/local-dev.md` for details.
+See [the local runbook](./docs/runbooks/local-dev.md) for details.
