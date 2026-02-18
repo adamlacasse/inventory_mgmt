@@ -4,10 +4,10 @@ import type { InventoryRepository } from "../inventory/repo";
 import { canOuttake } from "../inventory/service";
 import type { OuttakeRepository } from "./repo";
 import {
-  createOuttakeDraftTransactionInputSchema,
   type CreateOuttakeDraftTransactionInput,
-  type OuttakeLine,
   type OuttakeDraftTransaction,
+  type OuttakeLine,
+  createOuttakeDraftTransactionInputSchema,
 } from "./schema";
 
 export type OuttakeValidationErrorCode =
@@ -36,18 +36,12 @@ export interface OuttakeService {
 function mapOuttakeValidationError(input: unknown): OuttakeValidationError {
   const parsed = createOuttakeDraftTransactionInputSchema.safeParse(input);
   if (parsed.success) {
-    return new OuttakeValidationError(
-      "OUTTAKE_INVALID_PAYLOAD",
-      "Invalid outtake payload.",
-    );
+    return new OuttakeValidationError("OUTTAKE_INVALID_PAYLOAD", "Invalid outtake payload.");
   }
 
   const firstIssue = parsed.error.issues[0];
   if (!firstIssue) {
-    return new OuttakeValidationError(
-      "OUTTAKE_INVALID_PAYLOAD",
-      "Invalid outtake payload.",
-    );
+    return new OuttakeValidationError("OUTTAKE_INVALID_PAYLOAD", "Invalid outtake payload.");
   }
 
   if (
@@ -85,10 +79,7 @@ function mapOuttakeValidationError(input: unknown): OuttakeValidationError {
     );
   }
 
-  return new OuttakeValidationError(
-    "OUTTAKE_INVALID_PAYLOAD",
-    "Invalid outtake payload.",
-  );
+  return new OuttakeValidationError("OUTTAKE_INVALID_PAYLOAD", "Invalid outtake payload.");
 }
 
 function validateInput(
@@ -127,9 +118,7 @@ async function ensureInventoryAvailable(
   }
 }
 
-function toDraftTransaction(
-  input: CreateOuttakeDraftTransactionInput,
-): OuttakeDraftTransaction {
+function toDraftTransaction(input: CreateOuttakeDraftTransactionInput): OuttakeDraftTransaction {
   return {
     id: randomUUID(),
     type: "outtake",

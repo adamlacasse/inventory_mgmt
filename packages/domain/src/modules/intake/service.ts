@@ -1,11 +1,11 @@
 import { randomUUID } from "node:crypto";
 import { ZodIssueCode } from "zod";
+import type { IntakeRepository } from "./repo";
 import {
-  createIntakeDraftTransactionInputSchema,
   type CreateIntakeDraftTransactionInput,
   type IntakeDraftTransaction,
+  createIntakeDraftTransactionInputSchema,
 } from "./schema";
-import type { IntakeRepository } from "./repo";
 
 export type IntakeValidationErrorCode =
   | "INTAKE_LINE_ITEMS_REQUIRED"
@@ -24,26 +24,18 @@ export class IntakeValidationError extends Error {
 }
 
 export interface IntakeService {
-  createDraftTransaction(
-    input: CreateIntakeDraftTransactionInput,
-  ): Promise<IntakeDraftTransaction>;
+  createDraftTransaction(input: CreateIntakeDraftTransactionInput): Promise<IntakeDraftTransaction>;
 }
 
 function mapIntakeValidationError(input: unknown): IntakeValidationError {
   const parsed = createIntakeDraftTransactionInputSchema.safeParse(input);
   if (parsed.success) {
-    return new IntakeValidationError(
-      "INTAKE_INVALID_PAYLOAD",
-      "Invalid intake payload.",
-    );
+    return new IntakeValidationError("INTAKE_INVALID_PAYLOAD", "Invalid intake payload.");
   }
 
   const firstIssue = parsed.error.issues[0];
   if (!firstIssue) {
-    return new IntakeValidationError(
-      "INTAKE_INVALID_PAYLOAD",
-      "Invalid intake payload.",
-    );
+    return new IntakeValidationError("INTAKE_INVALID_PAYLOAD", "Invalid intake payload.");
   }
 
   if (
@@ -81,10 +73,7 @@ function mapIntakeValidationError(input: unknown): IntakeValidationError {
     );
   }
 
-  return new IntakeValidationError(
-    "INTAKE_INVALID_PAYLOAD",
-    "Invalid intake payload.",
-  );
+  return new IntakeValidationError("INTAKE_INVALID_PAYLOAD", "Invalid intake payload.");
 }
 
 function validateInput(
@@ -98,9 +87,7 @@ function validateInput(
   return parsed.data;
 }
 
-function toDraftTransaction(
-  input: CreateIntakeDraftTransactionInput,
-): IntakeDraftTransaction {
+function toDraftTransaction(input: CreateIntakeDraftTransactionInput): IntakeDraftTransaction {
   return {
     id: randomUUID(),
     type: "intake",

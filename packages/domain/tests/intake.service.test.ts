@@ -1,8 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import {
-  createIntakeService,
-  IntakeValidationError,
-} from "../src/modules/intake/service";
+import { type IntakeValidationError, createIntakeService } from "../src/modules/intake/service";
 
 describe("intake service", () => {
   it("creates a draft intake transaction with line items", async () => {

@@ -8,5 +8,10 @@ dist
 .env
 .env.local
 apps/web/.next
+apps/web/e2e.db
 packages/db/dev.db
 packages/db/dev.db-journal
+packages/db/e2e.db
+packages/db/e2e.db-journal
+packages/db/prisma/e2e.db
+packages/db/prisma/e2e.db-journal

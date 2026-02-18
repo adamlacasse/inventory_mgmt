@@ -1,9 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import type { AuditRepository } from "../src/modules/audit/repo";
-import {
-  createAuditService,
-  TransactionLockedError,
-} from "../src/modules/audit/service";
+import { TransactionLockedError, createAuditService } from "../src/modules/audit/service";
 
 function createInMemoryAuditRepository(): AuditRepository {
   const lockStates = new Map<string, boolean>();

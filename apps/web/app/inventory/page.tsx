@@ -1,6 +1,5 @@
-import { InventoryPageView } from "../../src/modules/inventory/InventoryPageView";
-import { sampleInventoryRows } from "../../src/modules/inventory/data";
+import { InventoryPageContainer } from "../../src/modules/inventory/InventoryPageContainer";
 
 export default function InventoryPage() {
-  return <InventoryPageView rows={sampleInventoryRows} />;
+  return <InventoryPageContainer />;
 }
