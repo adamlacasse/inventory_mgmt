@@ -77,8 +77,7 @@ const prismaClient = libsqlUrl
       log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
     });
 
-export const prisma =
-  globalForPrisma.prisma ?? prismaClient;
+export const prisma = globalForPrisma.prisma ?? prismaClient;
 
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;

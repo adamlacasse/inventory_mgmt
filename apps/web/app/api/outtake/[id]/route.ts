@@ -14,10 +14,7 @@ function getRouteParam(
   return Array.isArray(value) ? value[0] : value;
 }
 
-export async function PATCH(
-  request: Request,
-  context: RouteContext,
-) {
+export async function PATCH(request: Request, context: RouteContext) {
   try {
     const params = await context.params;
     const id = getRouteParam(params, "id");
