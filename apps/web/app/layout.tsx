@@ -1,3 +1,4 @@
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
@@ -45,6 +46,7 @@ export default function RootLayout({
           </nav>
         </header>
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );
