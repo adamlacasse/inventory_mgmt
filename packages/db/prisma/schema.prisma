@@ -56,3 +56,12 @@ model OuttakeItem {
   outtakeTransaction   OuttakeTransaction @relation(fields: [outtakeTransactionId], references: [id], onDelete: Restrict)
   product              Product            @relation(fields: [productId], references: [id], onDelete: Restrict)
 }
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("operator")
+  createdAt    DateTime @default(now())
+}

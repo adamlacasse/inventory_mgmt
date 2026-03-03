@@ -13,6 +13,8 @@
 - [ ] `pnpm test` passes
 - [ ] `pnpm test:e2e` passes
 - [ ] `pnpm db:migrate:status` passes
+- [ ] `SESSION_SECRET` is set in deployment environment (minimum 32 characters, generated with `openssl rand -hex 32`)
+- [ ] Seed users have non-default passwords in production
 - [ ] Demo smoke flow completed
 
 ## Go / No-Go Gates
@@ -22,6 +24,8 @@ Proceed only when all are true:
 - [ ] Outtake cannot exceed units on hand.
 - [ ] Locked transactions are immutable until explicit unlock.
 - [ ] Product uniqueness (`productName + productCategory + lotNumber`) is preserved.
+- [ ] All protected UI routes redirect to `/login` when accessed without a session.
+- [ ] All mutation API routes return `401` for unauthenticated requests.
 - [ ] Tests for changed behavior exist and are passing.
 
 ## Release Steps (Command Sequence)
@@ -63,6 +67,7 @@ Deploy using platform-specific workflow after all checks pass.
   ```text
   DATABASE_URL=libsql://<db-host>
   DATABASE_AUTH_TOKEN=<token>
+  SESSION_SECRET=<minimum-32-char-random-string-from-openssl-rand-hex-32>
   ```
 5. Deploy and run Post-Deploy Smoke checks.
 
@@ -74,12 +79,15 @@ Deploy using platform-specific workflow after all checks pass.
 
 ## Post-Deploy Smoke
 
-1. Create product at `/products`.
-2. Save intake at `/intake`.
-3. Save outtake at `/outtake`.
-4. Confirm `/inventory` reflects net units.
-5. Confirm `/history` lock/unlock controls work.
-6. Download `/api/reports/inventory` CSV.
+0. Verify that navigating to `/products` without a session redirects to `/login`.
+1. Log in at `/login`.
+2. Create product at `/products`.
+3. Save intake at `/intake`.
+4. Save outtake at `/outtake`.
+5. Confirm `/inventory` reflects net units.
+6. Confirm `/history` lock/unlock controls work.
+7. Download `/api/reports/inventory` CSV.
+8. Click "Sign Out" — confirm redirect to `/login`.
 
 ## Rollback Plan
 

@@ -1,3 +1,4 @@
+import { requireSession } from "../../../../../../src/server/auth";
 import { ApiError } from "../../../../../../src/server/errors";
 import { failure, ok } from "../../../../../../src/server/http";
 import { services } from "../../../../../../src/server/services";
@@ -16,6 +17,7 @@ function getRouteParam(
 
 export async function POST(_request: Request, context: RouteContext) {
   try {
+    await requireSession();
     const params = await context.params;
     const type = getRouteParam(params, "type");
     const id = getRouteParam(params, "id");

@@ -46,6 +46,15 @@ async function ensureSchema() {
       FOREIGN KEY (outtakeTransactionId) REFERENCES OuttakeTransaction(id) ON DELETE RESTRICT ON UPDATE CASCADE,
       FOREIGN KEY (productId) REFERENCES Product(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );`,
+    `CREATE TABLE IF NOT EXISTS "User" (
+      "id" TEXT NOT NULL PRIMARY KEY,
+      "email" TEXT NOT NULL,
+      "passwordHash" TEXT NOT NULL,
+      "name" TEXT NOT NULL,
+      "role" TEXT NOT NULL DEFAULT 'operator',
+      "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );`,
+    `CREATE UNIQUE INDEX IF NOT EXISTS "User_email_key" ON "User"("email");`,
   ];
 
   for (const statement of statements) {
@@ -61,6 +70,7 @@ describe("MVP smoke workflow", () => {
     await prisma.outtakeTransaction.deleteMany();
     await prisma.intakeTransaction.deleteMany();
     await prisma.product.deleteMany();
+    await prisma.user.deleteMany();
   });
 
   afterAll(async () => {

@@ -1,6 +1,9 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
+
+const SALT_ROUNDS = 12;
 
 async function seed() {
   await prisma.outtakeItem.deleteMany();
@@ -8,6 +11,25 @@ async function seed() {
   await prisma.outtakeTransaction.deleteMany();
   await prisma.intakeTransaction.deleteMany();
   await prisma.product.deleteMany();
+  await prisma.user.deleteMany();
+
+  await prisma.user.create({
+    data: {
+      email: "admin@example.com",
+      passwordHash: await bcrypt.hash("admin-change-me", SALT_ROUNDS),
+      name: "Admin User",
+      role: "admin",
+    },
+  });
+
+  await prisma.user.create({
+    data: {
+      email: "operator@example.com",
+      passwordHash: await bcrypt.hash("operator-change-me", SALT_ROUNDS),
+      name: "Operator User",
+      role: "operator",
+    },
+  });
 
   const blueDream = await prisma.product.create({
     data: {
@@ -83,7 +105,7 @@ async function seed() {
     },
   });
 
-  console.log("Seed completed: demo products, intake, and outtake transactions created.");
+  console.log("Seed completed: users, demo products, intake, and outtake transactions created.");
 }
 
 seed()

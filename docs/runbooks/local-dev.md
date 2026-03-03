@@ -19,6 +19,22 @@ pnpm --filter @inventory/db db:migrate:dev
 pnpm --filter @inventory/db db:generate
 ```
 
+## Auth Configuration
+
+After copying `.env.example` to `.env.local`, set a strong `SESSION_SECRET` (minimum 32 characters):
+
+```bash
+openssl rand -hex 32
+# Paste the output as SESSION_SECRET in apps/web/.env.local
+```
+
+Local development seed credentials (do not use in staging or production):
+
+| Email | Password | Role |
+|---|---|---|
+| `admin@example.com` | `admin-change-me` | admin |
+| `operator@example.com` | `operator-change-me` | operator |
+
 ## Optional Demo Seed
 
 ```bash
@@ -45,9 +61,11 @@ For release sequencing and go/no-go blockers, see `/Users/adamlacasse/Documents/
 
 ## Smoke Workflow (Manual)
 
+0. Navigate to `/products` — confirm redirect to `/login`. Log in with a seed user.
 1. Open `/products` and create at least one product.
 2. Open `/intake` and save an intake transaction.
 3. Open `/outtake` and save an outtake transaction.
 4. Open `/inventory` and verify net units on hand.
 5. Open `/history`, unlock and relock a transaction.
 6. Download `/api/reports/inventory` and verify CSV columns.
+7. Click "Sign Out" — confirm redirect to `/login`.

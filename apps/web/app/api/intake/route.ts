@@ -1,8 +1,10 @@
+import { requireSession } from "../../../src/server/auth";
 import { failure, ok, parseJson } from "../../../src/server/http";
 import { services } from "../../../src/server/services";
 
 export async function POST(request: Request) {
   try {
+    await requireSession();
     const payload = await parseJson(request);
     const transaction = await services.intake.create(payload);
     return ok({ transaction }, 201);

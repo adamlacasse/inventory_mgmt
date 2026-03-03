@@ -14,8 +14,10 @@
 
 ## Post-MVP
 
+- [ ] Authentication and access control (TASK-028)
 - [ ] Low stock alerts
-- [ ] Multi-user audit metadata
+- [ ] Multi-user audit metadata + role-based authorization (TASK-029)
+- [ ] Admin user management — admin-only UI + API (create, list, update, deactivate users); seed script retained for initial bootstrap only
 - [ ] Ninox migration import script
 
 ## Deferred
