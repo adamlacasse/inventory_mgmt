@@ -11,6 +11,8 @@
     "test": "corepack pnpm -r --if-present test",
     "test:e2e": "corepack pnpm --filter @inventory/web test:e2e",
     "db:migrate:status": "corepack pnpm --filter @inventory/db db:migrate:status",
+    "db:migrate:deploy": "corepack pnpm --filter @inventory/db db:migrate:deploy",
+    "db:seed:upsert": "corepack pnpm --filter @inventory/db db:seed:upsert",
     "check": "corepack pnpm lint && corepack pnpm typecheck && corepack pnpm test && corepack pnpm test:e2e && corepack pnpm db:migrate:status"
   },
   "devDependencies": {

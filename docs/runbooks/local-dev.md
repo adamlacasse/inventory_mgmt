@@ -41,6 +41,16 @@ Local development seed credentials (do not use in staging or production):
 pnpm --filter @inventory/db db:seed
 ```
 
+## Non-Destructive User Bootstrap Seed
+
+```bash
+BOOTSTRAP_ADMIN_EMAIL='admin@example.com' \
+BOOTSTRAP_ADMIN_PASSWORD='admin-change-me' \
+BOOTSTRAP_OPERATOR_EMAIL='operator@example.com' \
+BOOTSTRAP_OPERATOR_PASSWORD='operator-change-me' \
+pnpm --filter @inventory/db db:seed:upsert
+```
+
 ## Run App
 
 ```bash
