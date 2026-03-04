@@ -13,8 +13,13 @@ export type AppSession = {
 
 export const SESSION_COOKIE_NAME = "inventory_session";
 
+const sessionSecret = process.env.SESSION_SECRET;
+if (!sessionSecret) {
+  throw new Error("SESSION_SECRET environment variable is not set.");
+}
+
 export const sessionOptions: SessionOptions = {
-  password: process.env.SESSION_SECRET ?? "",
+  password: sessionSecret,
   cookieName: SESSION_COOKIE_NAME,
   ttl: 60 * 60 * 8, // 8 hours
   cookieOptions: {
