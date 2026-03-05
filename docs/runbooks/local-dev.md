@@ -67,7 +67,7 @@ pnpm test:e2e
 pnpm db:migrate:status
 ```
 
-For release sequencing and go/no-go blockers, see `/Users/adamlacasse/Documents/CODE/inventory_mgmt/docs/runbooks/deploy.md`.
+For release sequencing and go/no-go blockers, see `docs/runbooks/deploy.md`.
 
 ## Smoke Workflow (Manual)
 

@@ -1,8 +1,8 @@
 export default function HomePage() {
   return (
     <main>
-      <h1>Cannabis Inventory Platform</h1>
-      <p>Use the workflow links below for day-to-day inventory operations.</p>
+      <h1>Organizize</h1>
+      <p>Get organized with the workflow links below for day-to-day inventory operations.</p>
       <nav aria-label="Primary">
         <ul>
           <li>

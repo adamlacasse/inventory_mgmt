@@ -1,6 +1,6 @@
-# Cannabis Inventory Management System
+# Organizize
 
-Monorepo scaffold for a cannabis inventory platform with a lead engineer + AI agent workflow.
+Monorepo scaffold for the Organizize inventory management platform with a lead engineer + AI agent workflow.
 
 ## Workspace Layout
 

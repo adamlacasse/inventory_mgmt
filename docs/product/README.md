@@ -1,6 +1,6 @@
 # Product Docs
 
-- Source specification: `cannabis_inventory_spec.md`
+- Source specification: `organizize_spec.md`
 - Add backlog and release notes in this folder.
 
 ## Suggested Files

@@ -6,8 +6,9 @@ import { getSession } from "../src/server/auth";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Cannabis Inventory",
-  description: "Inventory management MVP for intake, outtake, inventory, and audit history",
+  title: "Organizize",
+  description:
+    "Organizize inventory management MVP for intake, outtake, inventory, and audit history",
 };
 
 export default async function RootLayout({
@@ -23,7 +24,7 @@ export default async function RootLayout({
       <body>
         <header className="app-header">
           <div className="app-header__brand">
-            <Link href="/">Cannabis Inventory</Link>
+            <Link href="/">Organizize</Link>
             <span className="app-header__tag">MVP</span>
           </div>
           <nav className="app-nav" aria-label="Primary">

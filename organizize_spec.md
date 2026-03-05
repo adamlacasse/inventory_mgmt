@@ -1,4 +1,4 @@
-# Cannabis Inventory Management System - Specification Document
+# Organizize - Specification Document
 
 **Client:** Tony (Vermont legal cannabis retailer)  
 **Developer:** [Your name]  
@@ -337,7 +337,7 @@ While not in prototype scope, be aware Tony may eventually need:
 
 ## Contact & Project Files
 
-- **This spec:** `cannabis_inventory_spec.md`
+- **This spec:** `organizize_spec.md`
 - **Original Ninox reference:** `Ninox_GBIT_Minimal_Reference_Build.pdf`
 - **Prototype repo:** [To be created]
 - **Demo URL:** [To be deployed]
