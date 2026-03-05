@@ -1,6 +1,7 @@
 import { requireSession } from "../../../../src/server/auth";
 import { ApiError } from "../../../../src/server/errors";
 import { failure, ok, parseJson } from "../../../../src/server/http";
+import { requireRole } from "../../../../src/server/roles";
 import { services } from "../../../../src/server/services";
 
 type RouteContext = {
@@ -17,14 +18,18 @@ function getRouteParam(
 
 export async function PATCH(request: Request, context: RouteContext) {
   try {
-    await requireSession();
+    const user = await requireSession();
+    requireRole(user, "operator");
     const params = await context.params;
     const id = getRouteParam(params, "id");
     if (!id) {
       throw new ApiError("INVALID_ROUTE_PARAMS", 400, "Route param id is required.");
     }
-    const payload = await parseJson(request);
-    const transaction = await services.intake.update(id, payload);
+    const payload = (await parseJson(request)) as Record<string, unknown>;
+    const transaction = await services.intake.update(id, {
+      ...payload,
+      actorUserId: user.id,
+    });
     return ok({ transaction });
   } catch (error) {
     return failure(error);

@@ -21,8 +21,10 @@ export async function POST(request: Request) {
 
     const user = await prisma.user.findUnique({ where: { email } });
 
-    // Generic error message — do not distinguish "user not found" from "wrong password"
-    if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+    // Generic error message — do not distinguish "user not found" from "wrong password" or "inactive"
+    // Check active field by checking it exists and is true
+    const isActive = user && "active" in user && user.active === true;
+    if (!user || !(await bcrypt.compare(password, user.passwordHash)) || !isActive) {
       throw new ApiError("INVALID_CREDENTIALS", 401, "Invalid email or password.");
     }
 

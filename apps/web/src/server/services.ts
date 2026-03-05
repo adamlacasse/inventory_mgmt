@@ -66,10 +66,10 @@ export function createServiceContainer() {
       list: (query: URLSearchParams) => getTransactionHistory(prisma, parseHistoryFilters(query)),
     },
     transactions: {
-      lock: (type: "intake" | "outtake", id: string) =>
-        setTransactionLockState(prisma, type, id, true),
-      unlock: (type: "intake" | "outtake", id: string) =>
-        setTransactionLockState(prisma, type, id, false),
+      lock: (type: "intake" | "outtake", id: string, actorUserId?: string) =>
+        setTransactionLockState(prisma, type, id, true, actorUserId),
+      unlock: (type: "intake" | "outtake", id: string, actorUserId?: string) =>
+        setTransactionLockState(prisma, type, id, false, actorUserId),
     },
     reporting: {
       inventoryCsv: (query: URLSearchParams) =>

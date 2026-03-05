@@ -3,6 +3,19 @@ import type { ApiError } from "../../src/server/errors";
 import { prisma } from "../../src/server/prisma";
 import { services } from "../../src/server/services";
 
+type TableInfoRow = {
+  name: string;
+};
+
+async function ensureColumnExists(table: string, column: string, definition: string) {
+  const rows = await prisma.$queryRawUnsafe<TableInfoRow[]>(`PRAGMA table_info("${table}");`);
+  const hasColumn = rows.some((row) => row.name === column);
+
+  if (!hasColumn) {
+    await prisma.$executeRawUnsafe(`ALTER TABLE "${table}" ADD COLUMN "${column}" ${definition};`);
+  }
+}
+
 async function ensureSchema() {
   const statements = [
     "PRAGMA foreign_keys = ON;",
@@ -20,6 +33,7 @@ async function ensureSchema() {
       date DATETIME NOT NULL,
       notes TEXT,
       saved BOOLEAN NOT NULL DEFAULT 0,
+      actorUserId TEXT,
       createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
     );`,
     `CREATE TABLE IF NOT EXISTS OuttakeTransaction (
@@ -28,6 +42,7 @@ async function ensureSchema() {
       customer TEXT,
       notes TEXT,
       saved BOOLEAN NOT NULL DEFAULT 0,
+      actorUserId TEXT,
       createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
     );`,
     `CREATE TABLE IF NOT EXISTS IntakeItem (
@@ -60,6 +75,10 @@ async function ensureSchema() {
   for (const statement of statements) {
     await prisma.$executeRawUnsafe(statement);
   }
+
+  await ensureColumnExists("IntakeTransaction", "actorUserId", "TEXT");
+  await ensureColumnExists("OuttakeTransaction", "actorUserId", "TEXT");
+  await ensureColumnExists("User", "active", "BOOLEAN NOT NULL DEFAULT true");
 }
 
 describe("MVP smoke workflow", () => {
@@ -143,5 +162,43 @@ describe("MVP smoke workflow", () => {
     const csv = await services.reporting.inventoryCsv(new URLSearchParams());
     expect(csv).toContain("Product Name,Category,Lot,Units On Hand");
     expect(csv).toContain("Blue Dream,Flower,LOT-100,7");
+  });
+
+  it("rejects viewer role from mutation routes", async () => {
+    // Create a viewer user
+    const bcrypt = await import("bcryptjs");
+    const hash = await bcrypt.hash("password", 10);
+    const viewer = await prisma.user.create({
+      data: {
+        id: "viewer-user",
+        email: "viewer@example.com",
+        passwordHash: hash,
+        name: "Viewer User",
+        role: "viewer",
+      },
+    });
+
+    // Viewer attempting to create a product should be rejected at role level
+    const viewerSession = {
+      id: viewer.id,
+      email: viewer.email,
+      name: viewer.name,
+      role: viewer.role,
+    };
+
+    const { requireRole } = await import("../../src/server/roles");
+
+    expect(() => requireRole(viewerSession, "operator")).toThrow(
+      expect.objectContaining({ code: "FORBIDDEN", status: 403 }),
+    );
+
+    // Admin should be allowed
+    const adminSession = {
+      id: "admin-1",
+      email: "admin@example.com",
+      name: "Admin",
+      role: "admin",
+    };
+    expect(() => requireRole(adminSession, "operator")).not.toThrow();
   });
 });

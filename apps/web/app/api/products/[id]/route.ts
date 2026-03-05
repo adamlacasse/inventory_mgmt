@@ -1,6 +1,7 @@
 import { requireSession } from "../../../../src/server/auth";
 import { ApiError } from "../../../../src/server/errors";
 import { failure, ok, parseJson } from "../../../../src/server/http";
+import { requireRole } from "../../../../src/server/roles";
 import { services } from "../../../../src/server/services";
 
 type RouteContext = {
@@ -17,7 +18,8 @@ function getRouteParam(
 
 export async function PATCH(request: Request, context: RouteContext) {
   try {
-    await requireSession();
+    const user = await requireSession();
+    requireRole(user, "operator");
     const params = await context.params;
     const id = getRouteParam(params, "id");
     if (!id) {

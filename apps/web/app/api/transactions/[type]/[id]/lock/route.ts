@@ -1,6 +1,7 @@
 import { requireSession } from "../../../../../../src/server/auth";
 import { ApiError } from "../../../../../../src/server/errors";
 import { failure, ok } from "../../../../../../src/server/http";
+import { requireRole } from "../../../../../../src/server/roles";
 import { services } from "../../../../../../src/server/services";
 
 type RouteContext = {
@@ -17,7 +18,8 @@ function getRouteParam(
 
 export async function POST(_request: Request, context: RouteContext) {
   try {
-    await requireSession();
+    const user = await requireSession();
+    requireRole(user, "operator");
     const params = await context.params;
     const type = getRouteParam(params, "type");
     const id = getRouteParam(params, "id");
@@ -32,7 +34,7 @@ export async function POST(_request: Request, context: RouteContext) {
       );
     }
 
-    const transaction = await services.transactions.lock(type, id);
+    const transaction = await services.transactions.lock(type, id, user.id);
     return ok({ transaction });
   } catch (error) {
     return failure(error);

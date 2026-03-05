@@ -13,6 +13,7 @@ export interface CreateOuttakeInput {
   notes?: string | undefined;
   lineItems: OuttakeLineItemInput[];
   save?: boolean | undefined;
+  actorUserId?: string | undefined;
 }
 
 export interface UpdateOuttakeInput {
@@ -21,6 +22,7 @@ export interface UpdateOuttakeInput {
   notes?: string | null | undefined;
   lineItems?: OuttakeLineItemInput[] | undefined;
   save?: boolean | undefined;
+  actorUserId?: string | undefined;
 }
 
 function parsePayload(payload: unknown): Record<string, unknown> {
@@ -208,6 +210,7 @@ export function parseCreateOuttakeInput(payload: unknown): CreateOuttakeInput {
     notes: parseOptionalString(data.notes, "notes"),
     lineItems: parseLineItems(data.lineItems),
     save: typeof data.save === "boolean" ? data.save : true,
+    actorUserId: typeof data.actorUserId === "string" ? data.actorUserId : undefined,
   };
 }
 
@@ -239,6 +242,10 @@ export function parseUpdateOuttakeInput(payload: unknown): UpdateOuttakeInput {
     input.save = data.save;
   }
 
+  if ("actorUserId" in data) {
+    input.actorUserId = typeof data.actorUserId === "string" ? data.actorUserId : undefined;
+  }
+
   if (Object.keys(input).length === 0) {
     throw new ApiError("INVALID_PAYLOAD", 400, "At least one outtake field must be updated.");
   }
@@ -259,6 +266,7 @@ export async function createOuttakeTransaction(client: PrismaClient, input: Crea
         customer: input.customer ?? null,
         notes: input.notes ?? null,
         saved: input.save ?? true,
+        actorUserId: input.actorUserId ?? null,
         items: {
           create: input.lineItems,
         },
@@ -319,6 +327,7 @@ export async function updateOuttakeTransaction(
         customer: input.customer === undefined ? existing.customer : input.customer,
         notes: input.notes === undefined ? existing.notes : input.notes,
         saved: nextSaved,
+        actorUserId: input.actorUserId ?? existing.actorUserId,
       },
     });
 
