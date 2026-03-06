@@ -80,6 +80,15 @@ describe("updateUser", () => {
       code: "CONFLICT",
     });
   });
+
+  it("rejects empty updates", async () => {
+    vi.mocked(prisma.user.findUnique).mockResolvedValue(mockUser as never);
+    await expect(updateUser("u1", {})).rejects.toMatchObject({
+      code: "INVALID_PAYLOAD",
+      status: 400,
+    });
+    expect(prisma.user.update).not.toHaveBeenCalled();
+  });
 });
 
 describe("deactivateUser", () => {

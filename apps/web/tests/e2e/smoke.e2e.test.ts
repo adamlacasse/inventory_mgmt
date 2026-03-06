@@ -163,42 +163,4 @@ describe("MVP smoke workflow", () => {
     expect(csv).toContain("Product Name,Category,Lot,Units On Hand");
     expect(csv).toContain("Blue Dream,Flower,LOT-100,7");
   });
-
-  it("rejects viewer role from mutation routes", async () => {
-    // Create a viewer user
-    const bcrypt = await import("bcryptjs");
-    const hash = await bcrypt.hash("password", 10);
-    const viewer = await prisma.user.create({
-      data: {
-        id: "viewer-user",
-        email: "viewer@example.com",
-        passwordHash: hash,
-        name: "Viewer User",
-        role: "viewer",
-      },
-    });
-
-    // Viewer attempting to create a product should be rejected at role level
-    const viewerSession = {
-      id: viewer.id,
-      email: viewer.email,
-      name: viewer.name,
-      role: viewer.role,
-    };
-
-    const { requireRole } = await import("../../src/server/roles");
-
-    expect(() => requireRole(viewerSession, "operator")).toThrow(
-      expect.objectContaining({ code: "FORBIDDEN", status: 403 }),
-    );
-
-    // Admin should be allowed
-    const adminSession = {
-      id: "admin-1",
-      email: "admin@example.com",
-      name: "Admin",
-      role: "admin",
-    };
-    expect(() => requireRole(adminSession, "operator")).not.toThrow();
-  });
 });

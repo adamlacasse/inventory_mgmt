@@ -91,6 +91,13 @@ export async function updateUser(id: string, input: UpdateUserInput): Promise<Us
   if (input.name !== undefined) data.name = input.name;
   if (input.role !== undefined) data.role = input.role;
   if (input.password !== undefined) data.passwordHash = await bcrypt.hash(input.password, 12);
+  if (Object.keys(data).length === 0) {
+    throw new ApiError(
+      "INVALID_PAYLOAD",
+      400,
+      "At least one of name, role, or password must be provided.",
+    );
+  }
   const updated = await (
     prisma.user.update as unknown as (
       opts: Prisma.UserUpdateArgs & { select: typeof userSelect },

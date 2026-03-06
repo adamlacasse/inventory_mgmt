@@ -18,11 +18,19 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     if (typeof p.role === "string" && !(ROLES as readonly string[]).includes(p.role)) {
       throw new ApiError("INVALID_PAYLOAD", 400, `role must be one of: ${ROLES.join(", ")}.`);
     }
-    const updated = await updateUser(id, {
+    const updateInput = {
       ...(typeof p.name === "string" && { name: p.name }),
       ...(typeof p.role === "string" && { role: p.role as Role }),
       ...(typeof p.password === "string" && { password: p.password }),
-    });
+    };
+    if (Object.keys(updateInput).length === 0) {
+      throw new ApiError(
+        "INVALID_PAYLOAD",
+        400,
+        "At least one of name, role, or password must be provided.",
+      );
+    }
+    const updated = await updateUser(id, updateInput);
     return ok({ user: updated });
   } catch (error) {
     return failure(error);
