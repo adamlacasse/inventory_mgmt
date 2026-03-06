@@ -1,5 +1,6 @@
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { LogoutButton } from "../src/modules/auth/LogoutButton";
 import { getSession } from "../src/server/auth";
@@ -18,14 +19,28 @@ export default async function RootLayout({
 }>) {
   const session = await getSession();
   const isLoggedIn = !!session.user;
+  const isAdmin = session.user?.role === "admin";
 
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body>
         <header className="app-header">
           <div className="app-header__brand">
+            <Link href="/" className="app-header__logo-link">
+              <Image
+                src="/images/GeeBees_4inchRoundLabel_wBleed+copy.webp"
+                alt="Organizize"
+                width={40}
+                height={40}
+                className="app-header__logo"
+                priority
+              />
+            </Link>
             <Link href="/">Organizize</Link>
-            <span className="app-header__tag">MVP</span>
           </div>
           <nav className="app-nav" aria-label="Primary">
             <Link className="app-nav__link" href="/">
@@ -49,6 +64,11 @@ export default async function RootLayout({
             <a className="app-nav__link" href="/api/reports/inventory">
               Export CSV
             </a>
+            {isAdmin && (
+              <Link className="app-nav__link" href="/admin/users">
+                Admin
+              </Link>
+            )}
             {isLoggedIn ? (
               <LogoutButton />
             ) : (

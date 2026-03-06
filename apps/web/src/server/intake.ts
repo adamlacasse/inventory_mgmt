@@ -15,6 +15,7 @@ export interface CreateIntakeInput {
   notes?: string | undefined;
   lineItems: IntakeLineItemInput[];
   save?: boolean | undefined;
+  actorUserId?: string | undefined;
 }
 
 export interface UpdateIntakeInput {
@@ -22,6 +23,7 @@ export interface UpdateIntakeInput {
   notes?: string | null | undefined;
   lineItems?: IntakeLineItemInput[] | undefined;
   save?: boolean | undefined;
+  actorUserId?: string | undefined;
 }
 
 function parsePayload(payload: unknown): Record<string, unknown> {
@@ -120,6 +122,7 @@ export function parseCreateIntakeInput(payload: unknown): CreateIntakeInput {
     notes: parseNotes(data.notes),
     lineItems: parseLineItems(data.lineItems),
     save: typeof data.save === "boolean" ? data.save : true,
+    actorUserId: typeof data.actorUserId === "string" ? data.actorUserId : undefined,
   };
 }
 
@@ -145,6 +148,10 @@ export function parseUpdateIntakeInput(payload: unknown): UpdateIntakeInput {
     }
 
     input.save = data.save;
+  }
+
+  if ("actorUserId" in data) {
+    input.actorUserId = typeof data.actorUserId === "string" ? data.actorUserId : undefined;
   }
 
   if (Object.keys(input).length === 0) {
@@ -245,6 +252,7 @@ export async function createIntakeTransaction(client: PrismaClient, input: Creat
       date: input.date,
       notes: input.notes ?? null,
       saved: input.save ?? true,
+      actorUserId: input.actorUserId ?? null,
       items: {
         create: lineItems,
       },
@@ -303,6 +311,7 @@ export async function updateIntakeTransaction(
         date: input.date ?? existing.date,
         notes: input.notes === undefined ? existing.notes : input.notes,
         saved: input.save ?? existing.saved,
+        actorUserId: input.actorUserId ?? existing.actorUserId,
       },
     });
 

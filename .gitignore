@@ -8,10 +8,15 @@ dist
 .env
 .env.local
 apps/web/.next
+apps/web/test.db
+apps/web/test.db-journal
 apps/web/e2e.db
+apps/web/tsconfig.tsbuildinfo
 packages/db/dev.db
 packages/db/dev.db-journal
 packages/db/e2e.db
 packages/db/e2e.db-journal
+packages/db/prisma/dev.db
+packages/db/prisma/dev.db-journal
 packages/db/prisma/e2e.db
 packages/db/prisma/e2e.db-journal

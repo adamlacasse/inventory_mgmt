@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { type FormEvent, Suspense, useState } from "react";
 
@@ -78,11 +79,21 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <main className="page-container">
-      <h1>Sign In</h1>
-      <Suspense>
-        <LoginForm />
-      </Suspense>
+    <main className="login-page">
+      <div className="login-card">
+        <Image
+          src="/images/GeeBees_4inchRoundLabel_wBleed+copy.webp"
+          alt="Organizize"
+          width={140}
+          height={140}
+          className="login-logo"
+          priority
+        />
+        <h1>Sign In</h1>
+        <Suspense>
+          <LoginForm />
+        </Suspense>
+      </div>
     </main>
   );
 }

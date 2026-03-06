@@ -25,6 +25,7 @@ model IntakeTransaction {
   date      DateTime
   notes     String?
   saved     Boolean      @default(false)
+  actorUserId String?
   createdAt DateTime     @default(now())
   items     IntakeItem[]
 }
@@ -44,6 +45,7 @@ model OuttakeTransaction {
   customer  String?
   notes     String?
   saved     Boolean       @default(false)
+  actorUserId String?
   createdAt DateTime      @default(now())
   items     OuttakeItem[]
 }
@@ -63,5 +65,6 @@ model User {
   passwordHash String
   name         String
   role         String   @default("operator")
+  active       Boolean  @default(true)
   createdAt    DateTime @default(now())
 }

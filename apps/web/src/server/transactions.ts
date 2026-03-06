@@ -71,6 +71,7 @@ export async function setTransactionLockState(
   type: TransactionType,
   transactionId: string,
   locked: boolean,
+  actorUserId?: string,
 ) {
   const id = transactionId.trim();
   if (id.length === 0) {
@@ -84,6 +85,7 @@ export async function setTransactionLockState(
       },
       data: {
         saved: locked,
+        actorUserId: actorUserId ?? null,
       },
     });
 
@@ -115,7 +117,10 @@ export async function setTransactionLockState(
 
         await tx.outtakeTransaction.update({
           where: { id },
-          data: { saved: true },
+          data: {
+            saved: true,
+            actorUserId: actorUserId ?? null,
+          },
         });
       });
 
@@ -132,6 +137,7 @@ export async function setTransactionLockState(
       },
       data: {
         saved: locked,
+        actorUserId: actorUserId ?? null,
       },
     });
 
