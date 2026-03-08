@@ -23,8 +23,6 @@ describe("resolvePrismaDatabaseUrl", () => {
   });
 
   it("preserves non-sqlite urls", () => {
-    expect(resolvePrismaDatabaseUrl("libsql://example.turso.io")).toBe(
-      "libsql://example.turso.io",
-    );
+    expect(resolvePrismaDatabaseUrl("libsql://example.turso.io")).toBe("libsql://example.turso.io");
   });
 });

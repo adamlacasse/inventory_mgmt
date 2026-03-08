@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { LogoutButton } from "../src/modules/auth/LogoutButton";
 import { getSession } from "../src/server/auth";
+import { shouldRenderSpeedInsights } from "../src/server/observability";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export default async function RootLayout({
   const session = await getSession();
   const isLoggedIn = !!session.user;
   const isAdmin = session.user?.role === "admin";
+  const showSpeedInsights = shouldRenderSpeedInsights();
 
   return (
     <html lang="en">
@@ -79,7 +81,7 @@ export default async function RootLayout({
           </nav>
         </header>
         {children}
-        <SpeedInsights />
+        {showSpeedInsights ? <SpeedInsights /> : null}
       </body>
     </html>
   );
