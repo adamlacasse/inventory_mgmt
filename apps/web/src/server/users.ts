@@ -1,4 +1,3 @@
-import type { Prisma } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { ApiError } from "./errors";
 import { prisma } from "./prisma";
@@ -36,11 +35,7 @@ const userSelect = {
 } as const;
 
 export async function listUsers(): Promise<UserDetail[]> {
-  const users = await (
-    prisma.user.findMany as unknown as (
-      opts: Prisma.UserFindManyArgs & { select: typeof userSelect },
-    ) => Promise<UserDetail[]>
-  )({
+  const users = await prisma.user.findMany({
     select: userSelect,
     orderBy: { createdAt: "asc" },
   });
@@ -59,11 +54,7 @@ export async function createUser(input: CreateUserInput): Promise<UserDetail> {
     throw new ApiError("CONFLICT", 409, "A user with that email already exists.");
   }
   const passwordHash = await bcrypt.hash(input.password, 12);
-  const user = await (
-    prisma.user.create as unknown as (
-      opts: Prisma.UserCreateArgs & { select: typeof userSelect },
-    ) => Promise<UserDetail>
-  )({
+  const user = await prisma.user.create({
     data: { email: input.email, name: input.name, passwordHash, role: input.role },
     select: userSelect,
   });
@@ -77,17 +68,14 @@ export async function updateUser(id: string, input: UpdateUserInput): Promise<Us
   }
   // Guard: cannot demote the last admin
   if (input.role && input.role !== "admin" && user.role === "admin") {
-    // Use raw where clause for count since 'active' may not be in types yet
-    const adminCount = await (
-      prisma.user.count as unknown as (opts: { where: Record<string, unknown> }) => Promise<number>
-    )({
+    const adminCount = await prisma.user.count({
       where: { role: "admin", active: true },
     });
     if (adminCount <= 1) {
       throw new ApiError("CONFLICT", 409, "Cannot change role of the last admin.");
     }
   }
-  const data: Record<string, unknown> = {};
+  const data: { name?: string; role?: string; passwordHash?: string } = {};
   if (input.name !== undefined) data.name = input.name;
   if (input.role !== undefined) data.role = input.role;
   if (input.password !== undefined) data.passwordHash = await bcrypt.hash(input.password, 12);
@@ -98,11 +86,7 @@ export async function updateUser(id: string, input: UpdateUserInput): Promise<Us
       "At least one of name, role, or password must be provided.",
     );
   }
-  const updated = await (
-    prisma.user.update as unknown as (
-      opts: Prisma.UserUpdateArgs & { select: typeof userSelect },
-    ) => Promise<UserDetail>
-  )({
+  const updated = await prisma.user.update({
     where: { id },
     data,
     select: userSelect,
@@ -119,21 +103,14 @@ export async function deactivateUser(id: string, actorId: string): Promise<UserD
     throw new ApiError("CONFLICT", 409, "Cannot deactivate your own account.");
   }
   if (user.role === "admin") {
-    // Use raw where clause for count since 'active' may not be in types yet
-    const adminCount = await (
-      prisma.user.count as unknown as (opts: { where: Record<string, unknown> }) => Promise<number>
-    )({
+    const adminCount = await prisma.user.count({
       where: { role: "admin", active: true },
     });
     if (adminCount <= 1) {
       throw new ApiError("CONFLICT", 409, "Cannot deactivate the last admin.");
     }
   }
-  const deactivated = await (
-    prisma.user.update as unknown as (
-      opts: Prisma.UserUpdateArgs & { select: typeof userSelect; data: Record<string, unknown> },
-    ) => Promise<UserDetail>
-  )({
+  const deactivated = await prisma.user.update({
     where: { id },
     data: { active: false },
     select: userSelect,
