@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import type { ApiError } from "../../src/server/errors";
 import { prisma } from "../../src/server/prisma";
 import { services } from "../../src/server/services";
@@ -81,15 +81,22 @@ async function ensureSchema() {
   await ensureColumnExists("User", "active", "BOOLEAN NOT NULL DEFAULT true");
 }
 
+async function resetData() {
+  await prisma.outtakeItem.deleteMany();
+  await prisma.intakeItem.deleteMany();
+  await prisma.outtakeTransaction.deleteMany();
+  await prisma.intakeTransaction.deleteMany();
+  await prisma.product.deleteMany();
+  await prisma.user.deleteMany();
+}
+
 describe("MVP smoke workflow", () => {
   beforeAll(async () => {
     await ensureSchema();
-    await prisma.outtakeItem.deleteMany();
-    await prisma.intakeItem.deleteMany();
-    await prisma.outtakeTransaction.deleteMany();
-    await prisma.intakeTransaction.deleteMany();
-    await prisma.product.deleteMany();
-    await prisma.user.deleteMany();
+  });
+
+  beforeEach(async () => {
+    await resetData();
   });
 
   afterAll(async () => {
@@ -162,5 +169,45 @@ describe("MVP smoke workflow", () => {
     const csv = await services.reporting.inventoryCsv(new URLSearchParams());
     expect(csv).toContain("Product Name,Category,Lot,Units On Hand");
     expect(csv).toContain("Blue Dream,Flower,LOT-100,7");
+  });
+
+  it("blocks locking a draft outtake when inventory is no longer available", async () => {
+    const product = await services.products.create({
+      productName: "OG Kush",
+      productCategory: "Flower",
+      lotNumber: "LOT-LOCK-001",
+    });
+
+    await services.intake.create({
+      date: "2026-03-01",
+      notes: "Initial stock",
+      lineItems: [{ productId: product.id, units: 10 }],
+      save: true,
+    });
+
+    const draftOuttake = await services.outtake.create({
+      date: "2026-03-02",
+      customer: "Draft customer",
+      lineItems: [{ productId: product.id, units: 6 }],
+      save: false,
+    });
+
+    await services.outtake.create({
+      date: "2026-03-03",
+      customer: "Committed customer",
+      lineItems: [{ productId: product.id, units: 10 }],
+      save: true,
+    });
+
+    await expect(services.transactions.lock("outtake", draftOuttake.id)).rejects.toMatchObject({
+      code: "OUTTAKE_INSUFFICIENT_INVENTORY",
+    } satisfies Partial<ApiError>);
+
+    const persistedDraft = await prisma.outtakeTransaction.findUnique({
+      where: { id: draftOuttake.id },
+      select: { saved: true },
+    });
+
+    expect(persistedDraft?.saved).toBe(false);
   });
 });
