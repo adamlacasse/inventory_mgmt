@@ -6,13 +6,13 @@
     "lint": "biome check .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests",
-    "db:migrate:status": "DATABASE_URL=file:./dev.db prisma validate --schema prisma/schema.prisma",
-    "db:migrate:deploy": "DATABASE_URL=${DATABASE_URL:-file:./dev.db} node --import tsx src/migrate-deploy.ts",
+    "db:migrate:status": "DATABASE_URL=${DATABASE_URL:-file:./prisma/dev.db} node --import tsx src/migrate-status.ts",
+    "db:migrate:deploy": "DATABASE_URL=${DATABASE_URL:-file:./prisma/dev.db} node --import tsx src/migrate-deploy.ts",
     "db:generate": "prisma generate --schema prisma/schema.prisma",
     "db:migrate:dev": "prisma migrate dev --schema prisma/schema.prisma",
     "db:turso:bootstrap": "sh -c 'unset DATABASE_URL; prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > /tmp/inventory-mvp.sql'",
-    "db:seed": "DATABASE_URL=${DATABASE_URL:-file:./dev.db} node --import tsx src/seed.ts",
-    "db:seed:upsert": "DATABASE_URL=${DATABASE_URL:-file:./dev.db} node --import tsx src/seed-upsert.ts"
+    "db:seed": "DATABASE_URL=${DATABASE_URL:-file:./prisma/dev.db} node --import tsx src/seed.ts",
+    "db:seed:upsert": "DATABASE_URL=${DATABASE_URL:-file:./prisma/dev.db} node --import tsx src/seed-upsert.ts"
   },
   "dependencies": {
     "@libsql/client": "0.8.1",

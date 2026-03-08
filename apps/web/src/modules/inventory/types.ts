@@ -9,4 +9,5 @@ export interface InventoryFilters {
   productName: string;
   category: string;
   lot: string;
+  lowStockOnly: boolean;
 }

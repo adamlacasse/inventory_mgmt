@@ -1,8 +1,8 @@
 import process from "node:process";
-import { applyPendingMigrations } from "./migrations";
+import { verifyMigrationStatus } from "./migrations";
 
 async function main(): Promise<void> {
-  await applyPendingMigrations();
+  await verifyMigrationStatus();
 }
 
 main().catch((error: unknown) => {
