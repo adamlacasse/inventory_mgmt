@@ -17,6 +17,11 @@ DATABASE_URL=file:./prisma/dev.db
 EOF
 pnpm --filter @inventory/db db:migrate:deploy
 pnpm --filter @inventory/db db:generate
+BOOTSTRAP_ADMIN_EMAIL='admin@example.com' \
+BOOTSTRAP_ADMIN_PASSWORD='admin-change-me' \
+BOOTSTRAP_OPERATOR_EMAIL='operator@example.com' \
+BOOTSTRAP_OPERATOR_PASSWORD='operator-change-me' \
+pnpm --filter @inventory/db db:seed:upsert
 ```
 
 ## Auth Configuration
@@ -28,7 +33,7 @@ openssl rand -hex 32
 # Paste the output as SESSION_SECRET in apps/web/.env.local
 ```
 
-Local development seed credentials (do not use in staging or production):
+Local development bootstrap credentials after running the bootstrap step above (do not use in staging or production):
 
 | Email | Password | Role |
 |---|---|---|
@@ -37,18 +42,10 @@ Local development seed credentials (do not use in staging or production):
 
 ## Optional Demo Seed
 
+This adds products plus intake/outtake history on top of the bootstrap users:
+
 ```bash
 pnpm --filter @inventory/db db:seed
-```
-
-## Non-Destructive User Bootstrap Seed
-
-```bash
-BOOTSTRAP_ADMIN_EMAIL='admin@example.com' \
-BOOTSTRAP_ADMIN_PASSWORD='admin-change-me' \
-BOOTSTRAP_OPERATOR_EMAIL='operator@example.com' \
-BOOTSTRAP_OPERATOR_PASSWORD='operator-change-me' \
-pnpm --filter @inventory/db db:seed:upsert
 ```
 
 ## Run App

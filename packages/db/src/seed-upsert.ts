@@ -1,8 +1,15 @@
 import process from "node:process";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { resolvePrismaDatabaseUrl } from "./database-url";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: resolvePrismaDatabaseUrl(),
+    },
+  },
+});
 const SALT_ROUNDS = 12;
 
 type BootstrapUser = {
