@@ -17,12 +17,13 @@ interface OuttakeLineState {
 }
 
 function createLineState(seed: number): OuttakeLineState {
-  return {
-    id: `line-${seed}`,
-    productId: "",
-    units: "1",
-  };
+  return { id: `line-${seed}`, productId: "", units: "1" };
 }
+
+const inputClass =
+  "border border-charcoal/20 bg-white px-3 py-2 text-sm font-serif text-charcoal focus:outline-none focus:border-charcoal rounded-sm w-full";
+const labelClass =
+  "flex flex-col gap-1 text-xs font-semibold tracking-widest uppercase text-charcoal/60";
 
 export function OuttakePageView() {
   const [inventoryRows, setInventoryRows] = useState<InventoryRow[]>([]);
@@ -41,11 +42,9 @@ export function OuttakePageView() {
           rows?: InventoryRow[];
           error?: { message: string };
         };
-
         if (!response.ok || !payload.rows) {
           throw new Error(payload.error?.message ?? "Failed to load available inventory.");
         }
-
         setInventoryRows(payload.rows);
       } catch (loadError) {
         setError(
@@ -53,7 +52,6 @@ export function OuttakePageView() {
         );
       }
     }
-
     void loadInventory();
   }, []);
 
@@ -69,10 +67,7 @@ export function OuttakePageView() {
 
   function removeLine(lineId: string) {
     setLineItems((previous) => {
-      if (previous.length === 1) {
-        return previous;
-      }
-
+      if (previous.length === 1) return previous;
       return previous.filter((lineItem) => lineItem.id !== lineId);
     });
   }
@@ -95,9 +90,7 @@ export function OuttakePageView() {
 
     const response = await fetch("/api/outtake", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
 
@@ -118,103 +111,138 @@ export function OuttakePageView() {
   }
 
   return (
-    <main>
-      <h1>Add Outtake</h1>
-      <p>Record sales/depletion from available inventory only.</p>
+    <div className="flex flex-col gap-6 max-w-3xl">
+      <div>
+        <h1 className="text-3xl font-bold tracking-wide text-charcoal m-0">Add Outtake</h1>
+        <p className="text-charcoal/60 mt-1 m-0">
+          Record sales and depletions from available inventory only.
+        </p>
+      </div>
 
-      {error ? <p role="alert">{error}</p> : null}
-      {statusMessage ? <p>{statusMessage}</p> : null}
+      {error ? (
+        <div className="px-4 py-3 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm rounded-sm">
+          {error}
+        </div>
+      ) : null}
+      {statusMessage ? (
+        <div className="px-4 py-3 bg-green-50 border-l-4 border-green-600 text-green-700 text-sm rounded-sm">
+          {statusMessage}
+        </div>
+      ) : null}
 
-      <form onSubmit={submitOuttake}>
-        <label htmlFor="outtake-date">
-          Date
-          <input
-            id="outtake-date"
-            type="date"
-            value={date}
-            onChange={(event) => {
-              setDate(event.target.value);
-            }}
-          />
-        </label>
+      <form onSubmit={submitOuttake} className="flex flex-col gap-6">
+        <div className="bg-white border border-charcoal/10 rounded-sm p-6 flex flex-col gap-4 shadow-sm">
+          <h2 className="text-xs font-semibold tracking-widest uppercase text-charcoal/50 m-0 pb-2 border-b border-charcoal/8">
+            Transaction Details
+          </h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <label className={labelClass} htmlFor="outtake-date">
+              Date
+              <input
+                id="outtake-date"
+                type="date"
+                value={date}
+                onChange={(event) => setDate(event.target.value)}
+                className={inputClass}
+              />
+            </label>
+            <label className={labelClass} htmlFor="outtake-customer">
+              Customer (optional)
+              <input
+                id="outtake-customer"
+                value={customer}
+                onChange={(event) => setCustomer(event.target.value)}
+                className={inputClass}
+              />
+            </label>
+          </div>
+          <label className={labelClass} htmlFor="outtake-notes">
+            Notes
+            <textarea
+              id="outtake-notes"
+              value={notes}
+              rows={3}
+              onChange={(event) => setNotes(event.target.value)}
+              className={`${inputClass} resize-y`}
+            />
+          </label>
+        </div>
 
-        <label htmlFor="outtake-customer">
-          Customer (optional)
-          <input
-            id="outtake-customer"
-            value={customer}
-            onChange={(event) => {
-              setCustomer(event.target.value);
-            }}
-          />
-        </label>
+        <div className="flex flex-col gap-3" aria-label="Outtake line items">
+          <h2 className="text-xs font-semibold tracking-widest uppercase text-charcoal/50 m-0">
+            Line Items
+          </h2>
 
-        <label htmlFor="outtake-notes">
-          Notes
-          <textarea
-            id="outtake-notes"
-            value={notes}
-            onChange={(event) => {
-              setNotes(event.target.value);
-            }}
-          />
-        </label>
+          {lineItems.map((lineItem, idx) => (
+            <div
+              key={lineItem.id}
+              className="bg-white border border-charcoal/10 rounded-sm p-5 flex flex-col gap-4 shadow-sm"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold tracking-widest uppercase text-charcoal/40">
+                  Line {idx + 1}
+                </span>
+                {lineItems.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeLine(lineItem.id)}
+                    className="text-xs text-red-500 hover:text-red-700 transition-colors cursor-pointer bg-transparent border-0 p-0 font-serif"
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
 
-        <section aria-label="Outtake line items">
-          <h2>Line Items</h2>
-          {lineItems.map((lineItem) => (
-            <article key={lineItem.id}>
-              <label>
-                Product
-                <select
-                  value={lineItem.productId}
-                  onChange={(event) => {
-                    updateLine(lineItem.id, {
-                      productId: event.target.value,
-                    });
-                  }}
-                >
-                  <option value="">Select available inventory</option>
-                  {inventoryRows.map((row) => (
-                    <option key={row.productId} value={row.productId}>
-                      {row.productName} | {row.category} | {row.lot} | {row.unitsOnHand} on hand
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <label className={`${labelClass} sm:col-span-2`}>
+                  Product / Lot
+                  <select
+                    value={lineItem.productId}
+                    onChange={(event) => updateLine(lineItem.id, { productId: event.target.value })}
+                    className={inputClass}
+                  >
+                    <option value="">Select available inventory…</option>
+                    {inventoryRows.map((row) => (
+                      <option key={row.productId} value={row.productId}>
+                        {row.productName} | {row.category} | {row.lot} | {row.unitsOnHand} on hand
+                      </option>
+                    ))}
+                  </select>
+                </label>
 
-              <label>
-                Units
-                <input
-                  type="number"
-                  min={1}
-                  step={1}
-                  value={lineItem.units}
-                  onChange={(event) => {
-                    updateLine(lineItem.id, {
-                      units: event.target.value,
-                    });
-                  }}
-                />
-              </label>
-
-              <button
-                type="button"
-                onClick={() => {
-                  removeLine(lineItem.id);
-                }}
-              >
-                Remove Line
-              </button>
-            </article>
+                <label className={labelClass}>
+                  Units
+                  <input
+                    type="number"
+                    min={1}
+                    step={1}
+                    value={lineItem.units}
+                    onChange={(event) => updateLine(lineItem.id, { units: event.target.value })}
+                    className={inputClass}
+                  />
+                </label>
+              </div>
+            </div>
           ))}
-        </section>
 
-        <button type="button" onClick={addLine}>
-          Add Line Item
-        </button>
-        <button type="submit">Save Outtake (Lock)</button>
+          <button
+            type="button"
+            onClick={addLine}
+            className="self-start text-sm text-charcoal/60 hover:text-charcoal border border-dashed border-charcoal/30 hover:border-charcoal/60 px-4 py-2 rounded-sm transition-colors cursor-pointer bg-transparent font-serif"
+          >
+            + Add Line Item
+          </button>
+        </div>
+
+        <div className="flex justify-end pt-2">
+          <button
+            type="submit"
+            className="bg-charcoal text-amber font-bold tracking-widest uppercase text-sm py-3 px-8 hover:bg-amber hover:text-charcoal transition-colors cursor-pointer rounded-sm shadow-sm"
+          >
+            Save Outtake (Lock)
+          </button>
+        </div>
       </form>
-    </main>
+    </div>
   );
 }

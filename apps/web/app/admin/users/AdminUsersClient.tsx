@@ -18,6 +18,11 @@ type Props = {
 
 const ROLES = ["viewer", "operator", "admin"] as const;
 
+const inputClass =
+  "border border-charcoal/20 bg-white px-3 py-2 text-sm font-serif text-charcoal focus:outline-none focus:border-charcoal rounded-sm w-full";
+const labelClass =
+  "flex flex-col gap-1 text-xs font-semibold tracking-widest uppercase text-charcoal/60";
+
 export function AdminUsersClient({ initialUsers, actorId }: Props) {
   const [users, setUsers] = useState<UserRow[]>(initialUsers);
   const [showAdd, setShowAdd] = useState(false);
@@ -99,55 +104,68 @@ export function AdminUsersClient({ initialUsers, actorId }: Props) {
   }
 
   return (
-    <main>
-      <div className="admin-users">
-        <div className="admin-users__header">
-          <h1>User Management</h1>
-          <button
-            type="button"
-            className="admin-users__add-btn"
-            onClick={() => setShowAdd((v) => !v)}
-          >
-            {showAdd ? "Cancel" : "+ Add User"}
-          </button>
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-wide text-charcoal m-0">User Management</h1>
+          <p className="text-charcoal/60 mt-1 m-0">Manage user accounts and role assignments.</p>
         </div>
+        <button
+          type="button"
+          onClick={() => setShowAdd((v) => !v)}
+          className="bg-charcoal text-amber font-bold tracking-widest uppercase text-xs py-2.5 px-5 hover:bg-amber hover:text-charcoal transition-colors cursor-pointer rounded-sm border-0"
+        >
+          {showAdd ? "Cancel" : "+ Add User"}
+        </button>
+      </div>
 
-        {showAdd && (
-          <form className="admin-users__add-form" onSubmit={handleAdd}>
-            <h2>New User</h2>
-            {addError && <p className="admin-users__error">{addError}</p>}
-            <label>
+      {showAdd && (
+        <div className="bg-white border border-charcoal/10 rounded-sm p-5 shadow-sm max-w-md">
+          <h2 className="text-xs font-semibold tracking-widest uppercase text-charcoal/50 m-0 mb-4 pb-2 border-b border-charcoal/8">
+            New User
+          </h2>
+          {addError && (
+            <div className="mb-3 px-3 py-2.5 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm rounded-sm">
+              {addError}
+            </div>
+          )}
+          <form onSubmit={handleAdd} className="flex flex-col gap-3">
+            <label className={labelClass}>
               Email
               <input
                 type="email"
                 required
                 value={addForm.email}
                 onChange={(e) => setAddForm((f) => ({ ...f, email: e.target.value }))}
+                className={inputClass}
               />
             </label>
-            <label>
+            <label className={labelClass}>
               Name
               <input
                 type="text"
                 required
                 value={addForm.name}
                 onChange={(e) => setAddForm((f) => ({ ...f, name: e.target.value }))}
+                className={inputClass}
               />
             </label>
-            <label>
+            <label className={labelClass}>
               Password
               <input
                 type="password"
                 required
                 value={addForm.password}
                 onChange={(e) => setAddForm((f) => ({ ...f, password: e.target.value }))}
+                className={inputClass}
               />
             </label>
-            <label>
+            <label className={labelClass}>
               Role
               <select
                 value={addForm.role}
                 onChange={(e) => setAddForm((f) => ({ ...f, role: e.target.value }))}
+                className={inputClass}
               >
                 {ROLES.map((r) => (
                   <option key={r} value={r}>
@@ -156,62 +174,103 @@ export function AdminUsersClient({ initialUsers, actorId }: Props) {
                 ))}
               </select>
             </label>
-            <button type="submit" disabled={addSubmitting}>
+            <button
+              type="submit"
+              disabled={addSubmitting}
+              className="mt-1 bg-charcoal text-amber font-bold tracking-widest uppercase text-xs py-2.5 px-5 hover:bg-amber hover:text-charcoal transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer rounded-sm border-0"
+            >
               {addSubmitting ? "Creating…" : "Create User"}
             </button>
           </form>
-        )}
+        </div>
+      )}
 
-        {actionError && <p className="admin-users__error">{actionError}</p>}
+      {actionError && (
+        <div className="px-4 py-3 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm rounded-sm max-w-lg">
+          {actionError}
+        </div>
+      )}
 
-        <table className="admin-users__table">
+      <div className="bg-white border border-charcoal/10 rounded-sm shadow-sm overflow-hidden">
+        <table className="w-full text-sm">
           <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Status</th>
-              <th>Actions</th>
+            <tr className="bg-charcoal text-white/80">
+              {["Name", "Email", "Role", "Status", "Actions"].map((h) => (
+                <th
+                  key={h}
+                  className="text-left px-4 py-3 text-xs font-semibold tracking-widest uppercase"
+                >
+                  {h}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
             {users.map((u) => (
-              <tr key={u.id} className={u.active ? "" : "admin-users__row--inactive"}>
-                <td>{u.name}</td>
-                <td>{u.email}</td>
-                <td>
+              <tr
+                key={u.id}
+                className={[
+                  "border-t border-charcoal/8",
+                  !u.active ? "opacity-50" : "hover:bg-charcoal/[0.015]",
+                ].join(" ")}
+              >
+                <td className="px-4 py-3 font-medium text-charcoal">{u.name}</td>
+                <td className="px-4 py-3 text-charcoal/60 text-xs font-mono">{u.email}</td>
+                <td className="px-4 py-3">
                   {editingId === u.id ? (
-                    <span className="admin-users__role-edit">
-                      <select value={editRole} onChange={(e) => setEditRole(e.target.value)}>
+                    <span className="flex items-center gap-2">
+                      <select
+                        value={editRole}
+                        onChange={(e) => setEditRole(e.target.value)}
+                        className="border border-charcoal/20 bg-white px-2 py-1 text-xs font-serif text-charcoal focus:outline-none focus:border-charcoal rounded-sm"
+                      >
                         {ROLES.map((r) => (
                           <option key={r} value={r}>
                             {r}
                           </option>
                         ))}
                       </select>
-                      <button type="button" onClick={() => handleRoleChange(u.id)}>
+                      <button
+                        type="button"
+                        onClick={() => handleRoleChange(u.id)}
+                        className="text-xs bg-charcoal text-amber hover:bg-amber hover:text-charcoal px-2 py-1 transition-colors cursor-pointer border-0 font-serif rounded-sm"
+                      >
                         Save
                       </button>
-                      <button type="button" onClick={() => setEditingId(null)}>
+                      <button
+                        type="button"
+                        onClick={() => setEditingId(null)}
+                        className="text-xs border border-charcoal/30 text-charcoal/60 hover:border-charcoal hover:text-charcoal px-2 py-1 transition-colors cursor-pointer bg-transparent font-serif rounded-sm"
+                      >
                         Cancel
                       </button>
                     </span>
                   ) : (
-                    <span className="admin-users__role-badge" data-role={u.role}>
+                    <span
+                      className={[
+                        "inline-block px-2 py-0.5 text-xs font-semibold tracking-widest uppercase rounded-sm",
+                        u.role === "admin"
+                          ? "bg-amber text-charcoal"
+                          : "bg-charcoal/8 text-charcoal/70",
+                      ].join(" ")}
+                    >
                       {u.role}
                     </span>
                   )}
                 </td>
-                <td>
+                <td className="px-4 py-3">
                   <span
-                    className={`admin-users__status ${u.active ? "admin-users__status--active" : "admin-users__status--inactive"}`}
+                    className={[
+                      "text-xs font-semibold",
+                      u.active ? "text-green-700" : "text-charcoal/40",
+                    ].join(" ")}
                   >
                     {u.active ? "Active" : "Inactive"}
                   </span>
                 </td>
-                <td className="admin-users__actions">
+                <td className="px-4 py-3">
                   {u.active && editingId !== u.id && (
-                    <>
+                    <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => {
@@ -219,19 +278,20 @@ export function AdminUsersClient({ initialUsers, actorId }: Props) {
                           setEditRole(u.role);
                           setActionError(null);
                         }}
+                        className="text-xs border border-charcoal/30 text-charcoal/70 hover:border-charcoal hover:text-charcoal px-3 py-1.5 transition-colors cursor-pointer bg-transparent font-serif rounded-sm"
                       >
                         Edit Role
                       </button>
                       {u.id !== actorId && (
                         <button
                           type="button"
-                          className="admin-users__deactivate-btn"
                           onClick={() => handleDeactivate(u.id)}
+                          className="text-xs border border-red-300 text-red-600 hover:bg-red-600 hover:text-white hover:border-red-600 px-3 py-1.5 transition-colors cursor-pointer bg-transparent font-serif rounded-sm"
                         >
                           Deactivate
                         </button>
                       )}
-                    </>
+                    </div>
                   )}
                 </td>
               </tr>
@@ -239,6 +299,6 @@ export function AdminUsersClient({ initialUsers, actorId }: Props) {
           </tbody>
         </table>
       </div>
-    </main>
+    </div>
   );
 }

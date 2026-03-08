@@ -28,59 +28,104 @@ export default async function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <script src="https://cdn.tailwindcss.com" />
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: static Tailwind CDN config, no user input
+          dangerouslySetInnerHTML={{
+            __html: `tailwind.config={theme:{extend:{colors:{charcoal:'#1c252c',amber:'#fdc740',cream:'#f9f7f4'},fontFamily:{serif:['"Cormorant Infant"','Georgia','serif']}}}}`,
+          }}
+        />
       </head>
-      <body>
-        <header className="app-header">
-          <div className="app-header__brand">
-            <Link href="/" className="app-header__logo-link">
-              <Image
-                src="/images/GeeBees_4inchRoundLabel_wBleed+copy.webp"
-                alt="Organizize"
-                width={40}
-                height={40}
-                className="app-header__logo"
-                priority
-              />
-            </Link>
-            <Link href="/">Organizize</Link>
+      <body className="bg-cream font-serif text-charcoal min-h-screen">
+        <header className="sticky top-0 z-50 bg-charcoal shadow-lg">
+          <div className="max-w-screen-xl mx-auto px-6 py-3 flex flex-wrap items-center justify-between gap-x-8 gap-y-2">
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <Link href="/" className="flex items-center">
+                <Image
+                  src="/images/GeeBees_4inchRoundLabel_wBleed+copy.webp"
+                  alt="Organizize"
+                  width={36}
+                  height={36}
+                  className="rounded-full object-contain"
+                  priority
+                />
+              </Link>
+              <Link
+                href="/"
+                className="text-amber font-bold tracking-widest uppercase text-sm no-underline hover:opacity-80 transition-opacity"
+              >
+                Organizize
+              </Link>
+            </div>
+
+            <nav className="flex flex-wrap items-center gap-1" aria-label="Primary">
+              <Link
+                href="/"
+                className="px-3 py-1.5 text-white/75 hover:text-amber text-sm tracking-wide transition-colors no-underline"
+              >
+                Home
+              </Link>
+              <Link
+                href="/products"
+                className="px-3 py-1.5 text-white/75 hover:text-amber text-sm tracking-wide transition-colors no-underline"
+              >
+                Products
+              </Link>
+              <Link
+                href="/intake"
+                className="px-3 py-1.5 text-white/75 hover:text-amber text-sm tracking-wide transition-colors no-underline"
+              >
+                Intake
+              </Link>
+              <Link
+                href="/outtake"
+                className="px-3 py-1.5 text-white/75 hover:text-amber text-sm tracking-wide transition-colors no-underline"
+              >
+                Outtake
+              </Link>
+              <Link
+                href="/inventory"
+                className="px-3 py-1.5 text-white/75 hover:text-amber text-sm tracking-wide transition-colors no-underline"
+              >
+                Inventory
+              </Link>
+              <Link
+                href="/history"
+                className="px-3 py-1.5 text-white/75 hover:text-amber text-sm tracking-wide transition-colors no-underline"
+              >
+                History
+              </Link>
+              <a
+                href="/api/reports/inventory"
+                className="px-3 py-1.5 text-white/75 hover:text-amber text-sm tracking-wide transition-colors no-underline"
+              >
+                Export CSV
+              </a>
+              {isAdmin && (
+                <Link
+                  href="/admin/users"
+                  className="px-3 py-1.5 text-white/75 hover:text-amber text-sm tracking-wide transition-colors no-underline"
+                >
+                  Admin
+                </Link>
+              )}
+              <div className="w-px h-4 bg-white/20 mx-1" />
+              {isLoggedIn ? (
+                <LogoutButton />
+              ) : (
+                <Link
+                  href="/login"
+                  className="px-3 py-1.5 border border-amber/50 text-amber hover:bg-amber hover:text-charcoal text-sm tracking-wide transition-colors no-underline rounded-sm"
+                >
+                  Sign In
+                </Link>
+              )}
+            </nav>
           </div>
-          <nav className="app-nav" aria-label="Primary">
-            <Link className="app-nav__link" href="/">
-              Home
-            </Link>
-            <Link className="app-nav__link" href="/products">
-              Products
-            </Link>
-            <Link className="app-nav__link" href="/intake">
-              Intake
-            </Link>
-            <Link className="app-nav__link" href="/outtake">
-              Outtake
-            </Link>
-            <Link className="app-nav__link" href="/inventory">
-              Inventory
-            </Link>
-            <Link className="app-nav__link" href="/history">
-              History
-            </Link>
-            <a className="app-nav__link" href="/api/reports/inventory">
-              Export CSV
-            </a>
-            {isAdmin && (
-              <Link className="app-nav__link" href="/admin/users">
-                Admin
-              </Link>
-            )}
-            {isLoggedIn ? (
-              <LogoutButton />
-            ) : (
-              <Link className="app-nav__link" href="/login">
-                Sign In
-              </Link>
-            )}
-          </nav>
         </header>
-        {children}
+
+        <div className="max-w-screen-xl mx-auto px-6 py-8">{children}</div>
+
         {showSpeedInsights ? <SpeedInsights /> : null}
       </body>
     </html>

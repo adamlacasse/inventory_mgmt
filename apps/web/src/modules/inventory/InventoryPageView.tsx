@@ -38,25 +38,43 @@ export function InventoryPageView({
   const hasRows = rows.length > 0;
 
   return (
-    <main className="inventory-page">
-      <h1>Current Inventory</h1>
-      <p>Review units on hand and narrow by product attributes.</p>
+    <div className="flex flex-col gap-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-wide text-charcoal m-0">Current Inventory</h1>
+        <p className="text-charcoal/60 mt-1 m-0">
+          Review units on hand and narrow by product attributes.
+        </p>
+      </div>
 
       {lowStockRows.length > 0 ? (
-        <section className="inventory-alert" aria-label="Low stock alerts">
-          <p>
-            {lowStockRows.length} lot{lowStockRows.length === 1 ? "" : "s"} at or below{" "}
-            {lowStockThreshold} units.
+        <div
+          className="flex items-start gap-3 px-4 py-3 bg-red-50 border-l-4 border-red-500 rounded-sm"
+          aria-label="Low stock alerts"
+        >
+          <span className="text-red-600 font-bold text-lg leading-none mt-0.5">⚠</span>
+          <p className="text-red-700 text-sm m-0">
+            <strong>{lowStockRows.length}</strong> lot{lowStockRows.length === 1 ? "" : "s"} at or
+            below {lowStockThreshold} units.
           </p>
-        </section>
+        </div>
       ) : (
-        <section className="inventory-alert inventory-alert--clear" aria-label="Low stock alerts">
-          <p>No low-stock lots right now.</p>
-        </section>
+        <div
+          className="flex items-start gap-3 px-4 py-3 bg-green-50 border-l-4 border-green-600 rounded-sm"
+          aria-label="Low stock alerts"
+        >
+          <span className="text-green-600 font-bold text-lg leading-none mt-0.5">✓</span>
+          <p className="text-green-700 text-sm m-0">All lots are above the low-stock threshold.</p>
+        </div>
       )}
 
-      <section className="inventory-filters" aria-label="Inventory filters">
-        <label htmlFor="inventory-filter-product-name">
+      <div
+        className="bg-white border border-charcoal/10 rounded-sm p-4 flex flex-wrap gap-4 items-end"
+        aria-label="Inventory filters"
+      >
+        <label
+          className="flex flex-col gap-1 text-xs font-semibold tracking-widest uppercase text-charcoal/60 flex-1 min-w-36"
+          htmlFor="inventory-filter-product-name"
+        >
           Product Name
           <input
             id="inventory-filter-product-name"
@@ -64,14 +82,16 @@ export function InventoryPageView({
             type="text"
             value={filters.productName}
             onChange={(event) => {
-              setFilters((previous) => ({
-                ...previous,
-                productName: event.target.value,
-              }));
+              setFilters((previous) => ({ ...previous, productName: event.target.value }));
             }}
+            className="border border-charcoal/20 bg-white px-3 py-2 text-sm font-serif text-charcoal focus:outline-none focus:border-charcoal rounded-sm"
           />
         </label>
-        <label htmlFor="inventory-filter-category">
+
+        <label
+          className="flex flex-col gap-1 text-xs font-semibold tracking-widest uppercase text-charcoal/60 flex-1 min-w-36"
+          htmlFor="inventory-filter-category"
+        >
           Category
           <input
             id="inventory-filter-category"
@@ -79,14 +99,16 @@ export function InventoryPageView({
             type="text"
             value={filters.category}
             onChange={(event) => {
-              setFilters((previous) => ({
-                ...previous,
-                category: event.target.value,
-              }));
+              setFilters((previous) => ({ ...previous, category: event.target.value }));
             }}
+            className="border border-charcoal/20 bg-white px-3 py-2 text-sm font-serif text-charcoal focus:outline-none focus:border-charcoal rounded-sm"
           />
         </label>
-        <label htmlFor="inventory-filter-lot">
+
+        <label
+          className="flex flex-col gap-1 text-xs font-semibold tracking-widest uppercase text-charcoal/60 flex-1 min-w-36"
+          htmlFor="inventory-filter-lot"
+        >
           Lot Number
           <input
             id="inventory-filter-lot"
@@ -94,78 +116,92 @@ export function InventoryPageView({
             type="text"
             value={filters.lot}
             onChange={(event) => {
-              setFilters((previous) => ({
-                ...previous,
-                lot: event.target.value,
-              }));
+              setFilters((previous) => ({ ...previous, lot: event.target.value }));
             }}
+            className="border border-charcoal/20 bg-white px-3 py-2 text-sm font-serif text-charcoal focus:outline-none focus:border-charcoal rounded-sm"
           />
         </label>
-        <label htmlFor="inventory-filter-low-stock-only" className="inventory-filters__checkbox">
+
+        <label
+          className="flex flex-row items-center gap-2 text-xs font-semibold tracking-widest uppercase text-charcoal/60 pb-2 cursor-pointer"
+          htmlFor="inventory-filter-low-stock-only"
+        >
           <input
             id="inventory-filter-low-stock-only"
             name="lowStockOnly"
             type="checkbox"
             checked={filters.lowStockOnly}
             onChange={(event) => {
-              setFilters((previous) => ({
-                ...previous,
-                lowStockOnly: event.target.checked,
-              }));
+              setFilters((previous) => ({ ...previous, lowStockOnly: event.target.checked }));
             }}
+            className="w-4 h-4 accent-charcoal cursor-pointer"
           />
           Low stock only
         </label>
-      </section>
+      </div>
 
       {!hasRows ? (
-        <p>No inventory data is currently available.</p>
+        <p className="text-charcoal/50 italic">No inventory data is currently available.</p>
       ) : visibleRows.length === 0 ? (
-        <p>No inventory rows match the current filters.</p>
+        <p className="text-charcoal/50 italic">No rows match the current filters.</p>
       ) : (
-        <table className="inventory-table">
-          <caption>Units on hand by product and lot</caption>
-          <thead>
-            <tr>
-              <th scope="col">Product Name</th>
-              <th scope="col">Category</th>
-              <th scope="col">Lot</th>
-              <th scope="col">Units On Hand</th>
-              <th scope="col">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {visibleRows.map((row) => {
-              const lowStock = isLowStockRow(row, lowStockThreshold);
-
-              return (
-                <tr
-                  key={`${row.productName}-${row.category}-${row.lot}`}
-                  className={
-                    lowStock ? "inventory-table__row inventory-table__row--low" : undefined
-                  }
-                >
-                  <td>{row.productName}</td>
-                  <td>{row.category}</td>
-                  <td>{row.lot}</td>
-                  <td>{row.unitsOnHand}</td>
-                  <td>
-                    <span
-                      className={
-                        lowStock
-                          ? "inventory-status-badge inventory-status-badge--low"
-                          : "inventory-status-badge inventory-status-badge--healthy"
-                      }
-                    >
-                      {lowStock ? "Low stock" : "Healthy"}
-                    </span>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <div className="bg-white border border-charcoal/10 rounded-sm overflow-hidden shadow-sm">
+          <table className="w-full text-sm">
+            <caption className="sr-only">Units on hand by product and lot</caption>
+            <thead>
+              <tr className="bg-charcoal text-white/80">
+                {["Product Name", "Category", "Lot", "Units On Hand", "Status"].map((h, i) => (
+                  <th
+                    key={h}
+                    scope="col"
+                    className={[
+                      "px-4 py-3 text-xs font-semibold tracking-widest uppercase",
+                      i === 3 ? "text-right" : "text-left",
+                    ].join(" ")}
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {visibleRows.map((row, index) => {
+                const lowStock = isLowStockRow(row, lowStockThreshold);
+                return (
+                  <tr
+                    key={`${row.productName}-${row.category}-${row.lot}`}
+                    className={[
+                      "border-t border-charcoal/8 transition-colors",
+                      lowStock
+                        ? "bg-red-50/60"
+                        : index % 2 === 0
+                          ? "bg-white"
+                          : "bg-charcoal/[0.02]",
+                    ].join(" ")}
+                  >
+                    <td className="px-4 py-3 text-charcoal font-medium">{row.productName}</td>
+                    <td className="px-4 py-3 text-charcoal/70">{row.category}</td>
+                    <td className="px-4 py-3 text-charcoal/60 font-mono text-xs">{row.lot}</td>
+                    <td className="px-4 py-3 text-right font-semibold tabular-nums">
+                      {row.unitsOnHand}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={[
+                          "inline-block px-2.5 py-0.5 text-xs font-semibold tracking-widest uppercase rounded-sm",
+                          lowStock ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700",
+                        ].join(" ")}
+                      >
+                        {lowStock ? "Low stock" : "Healthy"}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       )}
-    </main>
+    </div>
   );
 }

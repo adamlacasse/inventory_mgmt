@@ -14,7 +14,7 @@ describe("InventoryPageView", () => {
     const html = renderToStaticMarkup(<InventoryPageView rows={rows} />);
 
     expect(html).toContain("Current Inventory");
-    expect(html).toContain('class="inventory-table"');
+    expect(html).toContain("<table");
     expect(html).toContain("Blue Dream");
     expect(html).toContain("LOT-100");
     expect(html).toContain("Units On Hand");
@@ -37,7 +37,7 @@ describe("InventoryPageView", () => {
       />,
     );
 
-    expect(html).toContain("No inventory rows match the current filters.");
+    expect(html).toContain("No rows match the current filters.");
     expect(html).not.toContain("<table>");
   });
 

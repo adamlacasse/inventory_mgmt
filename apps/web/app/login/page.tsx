@@ -42,13 +42,20 @@ function LoginForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="login-form">
+    <form onSubmit={onSubmit} className="flex flex-col gap-4 w-full">
       {error ? (
-        <p role="alert" className="login-form__error">
+        <p
+          role="alert"
+          className="px-4 py-3 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm rounded-sm"
+        >
           {error}
         </p>
       ) : null}
-      <label className="login-form__field" htmlFor="login-email">
+
+      <label
+        className="flex flex-col gap-1.5 text-sm font-semibold tracking-wide"
+        htmlFor="login-email"
+      >
         Email
         <input
           id="login-email"
@@ -57,9 +64,14 @@ function LoginForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className="border border-charcoal/20 bg-white px-3 py-2.5 text-base font-serif text-charcoal placeholder-charcoal/40 focus:outline-none focus:border-charcoal focus:ring-1 focus:ring-charcoal/30 rounded-sm transition-colors"
         />
       </label>
-      <label className="login-form__field" htmlFor="login-password">
+
+      <label
+        className="flex flex-col gap-1.5 text-sm font-semibold tracking-wide"
+        htmlFor="login-password"
+      >
         Password
         <input
           id="login-password"
@@ -68,9 +80,15 @@ function LoginForm() {
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className="border border-charcoal/20 bg-white px-3 py-2.5 text-base font-serif text-charcoal placeholder-charcoal/40 focus:outline-none focus:border-charcoal focus:ring-1 focus:ring-charcoal/30 rounded-sm transition-colors"
         />
       </label>
-      <button type="submit" disabled={submitting}>
+
+      <button
+        type="submit"
+        disabled={submitting}
+        className="mt-2 bg-charcoal text-amber font-bold tracking-widest uppercase text-sm py-3 px-6 hover:bg-amber hover:text-charcoal transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer rounded-sm"
+      >
         {submitting ? "Signing in…" : "Sign In"}
       </button>
     </form>
@@ -79,21 +97,26 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <main className="login-page">
-      <div className="login-card">
+    <div className="flex items-center justify-center min-h-[calc(100svh-4rem)] -my-8 py-12">
+      <div className="bg-white shadow-md border border-charcoal/10 rounded-sm p-10 w-full max-w-sm flex flex-col items-center gap-6">
         <Image
           src="/images/GeeBees_4inchRoundLabel_wBleed+copy.webp"
           alt="Organizize"
-          width={140}
-          height={140}
-          className="login-logo"
+          width={120}
+          height={120}
+          className="rounded-full object-contain"
           priority
         />
-        <h1>Sign In</h1>
-        <Suspense>
-          <LoginForm />
-        </Suspense>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold tracking-wide text-charcoal m-0">Welcome back</h1>
+          <p className="text-charcoal/50 text-sm mt-1 m-0">Sign in to your account</p>
+        </div>
+        <div className="w-full">
+          <Suspense>
+            <LoginForm />
+          </Suspense>
+        </div>
       </div>
-    </main>
+    </div>
   );
 }
