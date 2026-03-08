@@ -2,25 +2,40 @@
 
 ## MVP Must Have
 
-- [x] Intake transaction creation with line items
-- [x] Outtake transaction creation with inventory guardrails
-- [x] Transaction lock/unlock flow
-- [x] Current inventory table with filters
-- [x] Product master list (add/edit/view)
-- [x] Transaction history view
-- [x] Basic CSV export of current inventory
-- [x] Seeded local demo flow and runnable setup commands
-- [x] E2E smoke coverage for core workflow
+- [x] Intake transaction creation with line items (TASK-002, TASK-011, TASK-018)
+- [x] Outtake transaction creation with inventory guardrails (TASK-003, TASK-012, TASK-019)
+- [x] Transaction lock/unlock flow (TASK-004, TASK-013)
+- [x] Current inventory table with filters (TASK-005, TASK-014, TASK-021)
+- [x] Product master list: add/edit/view (TASK-007, TASK-010, TASK-017)
+- [x] Transaction history view (TASK-015, TASK-020)
+- [x] Basic CSV export of current inventory (TASK-016)
+- [x] Seeded local demo flow and runnable setup commands (TASK-022)
+- [x] E2E smoke coverage for core workflow (TASK-024)
 
-## Post-MVP
+## Current Ship Condition
 
-- [ ] Authentication and access control (TASK-028)
-- [ ] Low stock alerts
-- [ ] Multi-user audit metadata + role-based authorization (TASK-029)
-- [ ] Admin user management — admin-only UI + API (create, list, update, deactivate users); seed script retained for initial bootstrap only
-- [ ] Ninox migration import script
+MVP is shippable when all of the following remain true on the current branch:
 
-## Deferred
+- Authenticated users can complete the end-to-end operator workflow: product -> intake -> outtake -> inventory -> history -> CSV.
+- Quality gates are green: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm test:e2e`, `pnpm db:migrate:status`.
+- Compliance-critical invariants hold:
+  - no over-outtake
+  - locked transactions stay immutable until explicit unlock
+  - product uniqueness (`productName + productCategory + lotNumber`) is preserved
+
+## Delivered Post-MVP
+
+- [x] Authentication and session access control (TASK-028)
+- [x] Role-based authorization and audit attribution (TASK-029)
+- [x] Admin user management: admin-only UI + API for create/list/update/deactivate (TASK-031)
+- [x] Branding and navigation updates (TASK-027, TASK-030)
+- [x] Low stock alerts on inventory view (TASK-033)
+
+## Remaining Near-Term
+
+- [ ] Release automation hardening: CI + deploy migration health (TASK-001, TASK-025, TASK-026)
+
+## Deferred / Later
 
 - [ ] POS integration
 - [ ] Cost/value reporting

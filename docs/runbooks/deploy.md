@@ -57,6 +57,7 @@ Run from repo root as a one-off job (local terminal or CI), not from a request h
   set -a
   source .env.vercel
   set +a
+  pnpm --filter @inventory/db db:generate
   pnpm db:migrate:deploy
   ```
 3. (Optional) Seed the target DB:
@@ -116,6 +117,7 @@ Seed guidance:
 ## Migration and Environment Notes
 
 - Ensure `DATABASE_URL` is set to the target environment and points to the intended database before any migration or build steps.
+- Local SQLite defaults to `file:./prisma/dev.db` under `packages/db`.
 - Confirm that any schema changes are backward-compatible with the previous release unless the rollout plan explicitly includes coordinated downtime.
 - If using SQLite for dev/demo, do not reuse production data in a local environment.
 

@@ -99,6 +99,97 @@ body > main {
   background: transparent;
 }
 
+.inventory-page {
+  display: grid;
+  gap: 1rem;
+}
+
+.inventory-alert {
+  border-left: 4px solid #c0392b;
+  padding: 0.85rem 1rem;
+  background: rgba(192, 57, 43, 0.08);
+}
+
+.inventory-alert--clear {
+  border-left-color: #2d6a4f;
+  background: rgba(45, 106, 79, 0.08);
+}
+
+.inventory-alert p {
+  margin: 0;
+}
+
+.inventory-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem 1rem;
+  align-items: end;
+}
+
+.inventory-filters label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.inventory-filters input[type="text"] {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-family: "Cormorant Infant", Georgia, serif;
+  font-size: 1rem;
+}
+
+.inventory-filters__checkbox {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 0.5rem !important;
+  padding-top: 1.4rem;
+}
+
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.inventory-table th,
+.inventory-table td {
+  padding: 0.65rem 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.inventory-table th {
+  background: var(--charcoal);
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+}
+
+.inventory-table__row--low {
+  background: rgba(192, 57, 43, 0.08);
+}
+
+.inventory-status-badge {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.inventory-status-badge--healthy {
+  background: rgba(45, 106, 79, 0.12);
+  color: #2d6a4f;
+}
+
+.inventory-status-badge--low {
+  background: rgba(192, 57, 43, 0.14);
+  color: #c0392b;
+}
+
 main {
   min-height: 100svh;
   padding: 2rem;

@@ -13,9 +13,9 @@ corepack prepare pnpm@9.15.0 --activate
 pnpm install
 cp apps/web/.env.example apps/web/.env.local
 cat <<'EOF' > packages/db/.env
-DATABASE_URL=file:./dev.db
+DATABASE_URL=file:./prisma/dev.db
 EOF
-pnpm --filter @inventory/db db:migrate:dev
+pnpm --filter @inventory/db db:migrate:deploy
 pnpm --filter @inventory/db db:generate
 ```
 

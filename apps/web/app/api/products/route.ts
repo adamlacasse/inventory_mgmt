@@ -5,6 +5,8 @@ import { services } from "../../../src/server/services";
 
 export async function GET() {
   try {
+    const user = await requireSession();
+    requireRole(user, "viewer");
     const products = await services.products.list();
     return ok({ products });
   } catch (error) {

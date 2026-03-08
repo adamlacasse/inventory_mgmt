@@ -1,5 +1,19 @@
 # TASK-032: Functional Recovery Plan (Post-Interruption)
 
+## Status
+
+Historical only. This task reflected the repo state on March 5, 2026 and is no longer an accurate description of the current branch.
+
+As of March 8, 2026:
+- `pnpm lint` passes
+- `pnpm typecheck` passes
+- `pnpm test` passes
+- `pnpm test:e2e` passes
+- `pnpm db:migrate:status` passes
+- TASK-028, TASK-029, TASK-030, TASK-031, and TASK-033 are implemented on the current branch
+
+Use `docs/product/backlog.md`, `docs/runbooks/local-dev.md`, and `docs/runbooks/deploy.md` as the current source of truth for planning and execution. Do not use this file to infer active breakages or remaining work.
+
 ## Goal
 Restore a fully functional app from the current in-between state while preserving compliance-critical behavior:
 - no over-outtake

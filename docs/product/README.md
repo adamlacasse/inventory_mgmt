@@ -1,7 +1,11 @@
 # Product Docs
 
-- Source specification: `organizize_spec.md`
-- Add backlog and release notes in this folder.
+Current planning source of truth:
+
+- `backlog.md` for shipped vs remaining product scope
+- `tasks/` for implementation-ready work items
+
+Add release notes, demos, and any restored product spec documents in this folder.
 
 ## Suggested Files
 
