@@ -33,6 +33,7 @@ MVP is shippable when all of the following remain true on the current branch:
 
 ## Remaining Near-Term
 
+- [ ] Primer design system migration and Tailwind/shadcn cleanup (TASK-036)
 - [ ] Release automation hardening: CI + deploy migration health (TASK-001, TASK-025, TASK-026)
 
 ## Deferred / Later

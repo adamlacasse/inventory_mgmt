@@ -8,6 +8,7 @@ Current branch status as of March 8, 2026:
 
 - Core inventory MVP flows are implemented: products, intake, outtake, inventory, history, CSV export.
 - Auth, RBAC, admin user management, branding/navigation, and low-stock alerts are implemented.
+- A Primer-based design system migration is planned for the web UI; see `docs/product/primer-design-system-migration.md` and `tasks/TASK-036-primer-design-system-migration.md`.
 - Quality gates currently pass from repo root:
   - `pnpm lint`
   - `pnpm typecheck`
@@ -18,6 +19,7 @@ Current branch status as of March 8, 2026:
 Current planning and handoff sources of truth:
 
 - `docs/product/backlog.md` for shipped vs remaining scope
+- `docs/product/primer-design-system-migration.md` for the UI migration order and cleanup plan
 - `docs/runbooks/local-dev.md` for local bootstrap
 - `docs/runbooks/deploy.md` for release/deploy procedure
 - `tasks/` for implementation-scoped work items
