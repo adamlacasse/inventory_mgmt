@@ -57,6 +57,46 @@ pnpm --filter @inventory/db db:seed:upsert
 pnpm dev
 ```
 
+## Local Architecture
+
+If you are used to a Vite React app plus a separate Node proxy, the closest mapping in this repo is:
+
+- `pnpm dev` at the repo root runs `pnpm --filter @inventory/web dev`, which starts `next dev`.
+- That single Next.js process serves both the UI in `apps/web/app` and the API routes in `apps/web/app/api`.
+- There is no separate local proxy server for normal development.
+- The database is the only separately prepared dependency: Prisma targets the local SQLite/libSQL database under `packages/db/prisma/dev.db` after migrations and client generation.
+
+The production-style local flow is still available, but it is also a single app process:
+
+```bash
+pnpm build
+pnpm --filter @inventory/web start
+```
+
+That is the closest equivalent to a "full stack" local run in a Vite plus proxy setup.
+
+## Request Flow
+
+High-level request flow in local development:
+
+```text
+Browser
+  -> Next.js app routes in apps/web/app
+  -> route handlers in apps/web/app/api or server-rendered page code
+  -> server composition in apps/web/src/server
+  -> domain logic in packages/domain
+  -> Prisma client in apps/web/src/server/prisma.ts
+  -> SQLite/libSQL database in packages/db/prisma/dev.db
+```
+
+In practical terms:
+
+- A page request such as `/products` is handled by the Next app in `apps/web/app/products/page.tsx`.
+- A client mutation such as `POST /api/outtake` is handled by a Next route handler in `apps/web/app/api/outtake/route.ts`.
+- Auth, RBAC, service composition, and database access live in `apps/web/src/server`.
+- Business rules and validation live in `packages/domain`.
+- Prisma reads and writes the local database prepared by the `@inventory/db` package scripts.
+
 ## Quality Gates
 
 ```bash
