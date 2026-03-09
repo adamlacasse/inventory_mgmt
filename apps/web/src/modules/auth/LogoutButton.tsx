@@ -12,11 +12,7 @@ export function LogoutButton() {
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleLogout}
-      className="px-3 py-1.5 text-white/75 hover:text-amber text-sm tracking-wide transition-colors cursor-pointer bg-transparent border-0 font-serif"
-    >
+    <button type="button" onClick={handleLogout} className="btn-nav-signout">
       Sign Out
     </button>
   );

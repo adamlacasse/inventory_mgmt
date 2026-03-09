@@ -11,6 +11,10 @@
     "test": "vitest run --passWithNoTests"
   },
   "peerDependencies": {
-    "react": "19.0.0"
+    "@primer/react": "38.x",
+    "react": ">=19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.0.8"
   }
 }

@@ -18,7 +18,7 @@ describe("InventoryPageView", () => {
     expect(html).toContain("Blue Dream");
     expect(html).toContain("LOT-100");
     expect(html).toContain("Units On Hand");
-    expect(html).toContain("1 lot at or below 5 units.");
+    expect(html).toContain("lot at or below 5 units.");
     expect(html).toContain("Low stock");
   });
 

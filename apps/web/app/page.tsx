@@ -39,28 +39,22 @@ const modules = [
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col gap-8">
-      <div className="max-w-2xl">
-        <h1 className="text-4xl font-bold tracking-wide text-charcoal m-0">Organizize</h1>
-        <p className="text-charcoal/60 mt-2 text-lg m-0">
+    <div className="page-stack">
+      <div>
+        <h1 className="page-title">Organizize</h1>
+        <p className="page-subtitle">
           Inventory management for day-to-day operations. Select a module to get started.
         </p>
       </div>
 
-      <nav aria-label="Primary" className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <nav aria-label="Primary" className="module-grid">
         {modules.map(({ href, label, description, icon }) => (
-          <a
-            key={href}
-            href={href}
-            className="group block bg-white border border-charcoal/10 rounded-sm p-5 shadow-sm hover:border-charcoal/30 hover:shadow-md transition-all no-underline"
-          >
-            <div className="flex items-start gap-3">
-              <span className="text-2xl leading-none mt-0.5">{icon}</span>
+          <a key={href} href={href} className="module-card">
+            <div className="module-card-inner">
+              <span className="module-card-icon">{icon}</span>
               <div>
-                <div className="font-bold text-charcoal tracking-wide group-hover:text-amber transition-colors">
-                  {label}
-                </div>
-                <div className="text-sm text-charcoal/55 mt-1 leading-snug">{description}</div>
+                <div className="module-card-label">{label}</div>
+                <div className="module-card-desc">{description}</div>
               </div>
             </div>
           </a>

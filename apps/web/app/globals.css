@@ -1,19 +1,586 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,700&display=swap");
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+/* ── Brand tokens ─────────────────────────────────────────── */
+:root {
+  --color-org-charcoal: #1c252c;
+  --color-org-amber: #fdc740;
+  --color-org-cream: #f9f7f4;
 }
 
+/* ── Override Primer page background to brand cream ───────── */
 body {
-  margin: 0;
-  font-family: "Cormorant Infant", Georgia, serif;
-  background: #f9f7f4;
-  color: #1c252c;
-  -webkit-font-smoothing: antialiased;
+  background-color: var(--color-org-cream) !important;
 }
 
-table {
+/* ── Brand serif for page headings ───────────────────────── */
+h1 {
+  font-family: "Cormorant Infant", Georgia, serif;
+}
+
+/* ── App shell header ─────────────────────────────────────── */
+.app-header {
+  background-color: var(--color-org-charcoal);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.app-header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 32px;
+}
+
+.app-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.app-brand-name {
+  color: var(--color-org-amber);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+
+.app-brand-name:hover {
+  opacity: 0.8;
+}
+
+.app-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-link {
+  display: inline-block;
+  padding: 6px 12px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+
+.nav-link:hover {
+  color: var(--color-org-amber);
+}
+
+.nav-link-signin {
+  border: 1px solid rgba(253, 199, 64, 0.5);
+  color: var(--color-org-amber);
+  border-radius: 4px;
+}
+
+.nav-link-signin:hover {
+  background-color: var(--color-org-amber);
+  color: var(--color-org-charcoal);
+}
+
+.nav-divider {
+  display: inline-block;
+  width: 1px;
+  height: 16px;
+  background-color: rgba(255, 255, 255, 0.2);
+  margin: 0 4px;
+  vertical-align: middle;
+}
+
+/* ── Page content wrapper ─────────────────────────────────── */
+.page-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+/* ── Brand primary button ─────────────────────────────────── */
+.btn-brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-org-charcoal);
+  color: var(--color-org-amber);
+  border: 0;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.btn-brand:hover:not(:disabled) {
+  background-color: var(--color-org-amber);
+  color: var(--color-org-charcoal);
+}
+
+.btn-brand:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Secondary outline button ─────────────────────────────── */
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  color: rgba(28, 37, 44, 0.7);
+  border: 1px solid rgba(28, 37, 44, 0.3);
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  font-family: inherit;
+}
+
+.btn-outline:hover:not(:disabled) {
+  color: var(--color-org-charcoal);
+  border-color: var(--color-org-charcoal);
+}
+
+/* ── Danger outline button ────────────────────────────────── */
+.btn-danger-outline {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+  font-family: inherit;
+}
+
+.btn-danger-outline:hover:not(:disabled) {
+  background-color: #dc2626;
+  color: white;
+  border-color: #dc2626;
+}
+
+/* ── Dashed add-line button ───────────────────────────────── */
+.btn-add-line {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  color: rgba(28, 37, 44, 0.6);
+  border: 1px dashed rgba(28, 37, 44, 0.3);
+  font-size: 0.875rem;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  font-family: inherit;
+}
+
+.btn-add-line:hover {
+  color: var(--color-org-charcoal);
+  border-color: rgba(28, 37, 44, 0.6);
+}
+
+/* ── Remove-line button ───────────────────────────────────── */
+.btn-remove-line {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: #dc2626;
+  font-size: 0.75rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+
+.btn-remove-line:hover {
+  color: #991b1b;
+}
+
+/* ── Nav-style sign-out button ────────────────────────────── */
+.btn-nav-signout {
+  background: transparent;
+  border: 0;
+  padding: 6px 12px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  font-family: inherit;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+
+.btn-nav-signout:hover {
+  color: var(--color-org-amber);
+}
+
+/* ── Section card ─────────────────────────────────────────── */
+.section-card {
+  background-color: white;
+  border: 1px solid rgba(28, 37, 44, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.section-card-header {
+  padding: 12px 20px;
+  border-bottom: 1px solid rgba(28, 37, 44, 0.08);
+  background-color: rgba(28, 37, 44, 0.02);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(28, 37, 44, 0.5);
+  margin: 0;
+}
+
+.section-card-body {
+  padding: 20px;
+}
+
+/* ── Form fields ──────────────────────────────────────────── */
+.form-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(28, 37, 44, 0.6);
+}
+
+.form-label-inline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(28, 37, 44, 0.6);
+  cursor: pointer;
+}
+
+.form-input {
+  border: 1px solid rgba(28, 37, 44, 0.2);
+  background-color: white;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  color: var(--color-org-charcoal);
+  border-radius: 4px;
+  width: 100%;
+  font-family: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: var(--color-org-charcoal);
+  box-shadow: 0 0 0 3px rgba(28, 37, 44, 0.1);
+}
+
+.form-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-org-charcoal);
+  cursor: pointer;
+}
+
+/* ── Data table ───────────────────────────────────────────── */
+.data-table {
+  width: 100%;
+  font-size: 0.875rem;
   border-collapse: collapse;
+}
+
+.data-table thead tr {
+  background-color: var(--color-org-charcoal);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.data-table thead th {
+  padding: 12px 16px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.data-table thead th.col-right {
+  text-align: right;
+}
+
+.data-table tbody tr {
+  border-top: 1px solid rgba(28, 37, 44, 0.08);
+  transition: background-color 0.1s;
+}
+
+.data-table tbody tr.row-even {
+  background-color: white;
+}
+
+.data-table tbody tr.row-odd {
+  background-color: rgba(28, 37, 44, 0.02);
+}
+
+.data-table tbody tr.row-low-stock {
+  background-color: rgba(254, 202, 202, 0.4);
+}
+
+.data-table tbody tr:not(.row-low-stock):hover {
+  background-color: rgba(28, 37, 44, 0.015);
+}
+
+.data-table tbody td {
+  padding: 12px 16px;
+}
+
+.data-table tbody td.col-right {
+  text-align: right;
+}
+
+.data-table tbody td.col-mono {
+  font-family: monospace;
+  font-size: 0.75rem;
+}
+
+/* ── Status badges ────────────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 4px;
+}
+
+.badge-low-stock {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.badge-healthy {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.badge-intake {
+  background-color: var(--color-org-charcoal);
+  color: var(--color-org-amber);
+}
+
+.badge-outtake {
+  background-color: var(--color-org-amber);
+  color: var(--color-org-charcoal);
+}
+
+.badge-locked {
+  background-color: rgba(28, 37, 44, 0.08);
+  color: rgba(28, 37, 44, 0.6);
+}
+
+.badge-unlocked {
+  background-color: rgba(253, 199, 64, 0.2);
+  color: var(--color-org-charcoal);
+}
+
+.badge-role-admin {
+  background-color: var(--color-org-amber);
+  color: var(--color-org-charcoal);
+}
+
+.badge-role-other {
+  background-color: rgba(28, 37, 44, 0.08);
+  color: rgba(28, 37, 44, 0.7);
+}
+
+/* ── Home page module cards ───────────────────────────────── */
+.module-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .module-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .module-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.module-card {
+  display: block;
+  background-color: white;
+  border: 1px solid rgba(28, 37, 44, 0.1);
+  border-radius: 4px;
+  padding: 20px;
+  text-decoration: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.module-card:hover {
+  border-color: rgba(28, 37, 44, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.module-card-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.module-card-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.module-card-label {
+  font-weight: 700;
+  color: var(--color-org-charcoal);
+  letter-spacing: 0.04em;
+  transition: color 0.15s;
+}
+
+.module-card:hover .module-card-label {
+  color: var(--color-org-amber);
+}
+
+.module-card-desc {
+  font-size: 0.875rem;
+  color: rgba(28, 37, 44, 0.55);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* ── Login page ───────────────────────────────────────────── */
+.login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100svh - 4rem);
+  padding: 48px 0;
+  margin: -32px -24px;
+}
+
+.login-card {
+  background-color: white;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(28, 37, 44, 0.1);
+  border-radius: 4px;
+  padding: 40px;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* ── Utility ──────────────────────────────────────────────── */
+.page-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page-title {
+  margin: 0;
+  color: var(--color-org-charcoal);
+}
+
+.page-subtitle {
+  color: rgba(28, 37, 44, 0.6);
+  margin: 4px 0 0;
+}
+
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.actions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.actions-end {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.grid-layout-1-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 1024px) {
+  .grid-layout-1-2 {
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 144px;
 }
