@@ -2,6 +2,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { PrimerProvider } from "../src/components/PrimerProvider";
 import { LogoutButton } from "../src/modules/auth/LogoutButton";
 import { getSession } from "../src/server/auth";
 import { shouldRenderSpeedInsights } from "../src/server/observability";
@@ -28,105 +29,70 @@ export default async function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <script src="https://cdn.tailwindcss.com" />
-        <script
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: static Tailwind CDN config, no user input
-          dangerouslySetInnerHTML={{
-            __html: `tailwind.config={theme:{extend:{colors:{charcoal:'#1c252c',amber:'#fdc740',cream:'#f9f7f4'},fontFamily:{serif:['"Cormorant Infant"','Georgia','serif']}}}}`,
-          }}
-        />
       </head>
-      <body className="bg-cream font-serif text-charcoal min-h-screen">
-        <header className="sticky top-0 z-50 bg-charcoal shadow-lg">
-          <div className="max-w-screen-xl mx-auto px-6 py-3 flex flex-wrap items-center justify-between gap-x-8 gap-y-2">
-            <div className="flex items-center gap-3 flex-shrink-0">
-              <Link href="/" className="flex items-center">
-                <Image
-                  src="/images/GeeBees_4inchRoundLabel_wBleed+copy.webp"
-                  alt="Organizize"
-                  width={36}
-                  height={36}
-                  className="rounded-full object-contain"
-                  priority
-                />
-              </Link>
-              <Link
-                href="/"
-                className="text-amber font-bold tracking-widest uppercase text-sm no-underline hover:opacity-80 transition-opacity"
-              >
-                Organizize
-              </Link>
+      <body>
+        <PrimerProvider>
+          <header className="app-header">
+            <div className="app-header-inner">
+              <div style={{ display: "flex", alignItems: "center", gap: "12px", flexShrink: 0 }}>
+                <Link href="/" className="app-brand">
+                  <Image
+                    src="/images/GeeBees_4inchRoundLabel_wBleed+copy.webp"
+                    alt="Organizize"
+                    width={36}
+                    height={36}
+                    style={{ borderRadius: "50%", objectFit: "contain" }}
+                    priority
+                  />
+                </Link>
+                <Link href="/" className="app-brand-name">
+                  Organizize
+                </Link>
+              </div>
+
+              <nav className="app-nav" aria-label="Primary">
+                <Link href="/" className="nav-link">
+                  Home
+                </Link>
+                <Link href="/products" className="nav-link">
+                  Products
+                </Link>
+                <Link href="/intake" className="nav-link">
+                  Intake
+                </Link>
+                <Link href="/outtake" className="nav-link">
+                  Outtake
+                </Link>
+                <Link href="/inventory" className="nav-link">
+                  Inventory
+                </Link>
+                <Link href="/history" className="nav-link">
+                  History
+                </Link>
+                <a href="/api/reports/inventory" className="nav-link">
+                  Export CSV
+                </a>
+                {isAdmin && (
+                  <Link href="/admin/users" className="nav-link">
+                    Admin
+                  </Link>
+                )}
+                <span className="nav-divider" aria-hidden="true" />
+                {isLoggedIn ? (
+                  <LogoutButton />
+                ) : (
+                  <Link href="/login" className="nav-link nav-link-signin">
+                    Sign In
+                  </Link>
+                )}
+              </nav>
             </div>
+          </header>
 
-            <nav className="flex flex-wrap items-center gap-1" aria-label="Primary">
-              <Link
-                href="/"
-                className="px-3 py-1.5 text-white/75 hover:text-amber text-sm tracking-wide transition-colors no-underline"
-              >
-                Home
-              </Link>
-              <Link
-                href="/products"
-                className="px-3 py-1.5 text-white/75 hover:text-amber text-sm tracking-wide transition-colors no-underline"
-              >
-                Products
-              </Link>
-              <Link
-                href="/intake"
-                className="px-3 py-1.5 text-white/75 hover:text-amber text-sm tracking-wide transition-colors no-underline"
-              >
-                Intake
-              </Link>
-              <Link
-                href="/outtake"
-                className="px-3 py-1.5 text-white/75 hover:text-amber text-sm tracking-wide transition-colors no-underline"
-              >
-                Outtake
-              </Link>
-              <Link
-                href="/inventory"
-                className="px-3 py-1.5 text-white/75 hover:text-amber text-sm tracking-wide transition-colors no-underline"
-              >
-                Inventory
-              </Link>
-              <Link
-                href="/history"
-                className="px-3 py-1.5 text-white/75 hover:text-amber text-sm tracking-wide transition-colors no-underline"
-              >
-                History
-              </Link>
-              <a
-                href="/api/reports/inventory"
-                className="px-3 py-1.5 text-white/75 hover:text-amber text-sm tracking-wide transition-colors no-underline"
-              >
-                Export CSV
-              </a>
-              {isAdmin && (
-                <Link
-                  href="/admin/users"
-                  className="px-3 py-1.5 text-white/75 hover:text-amber text-sm tracking-wide transition-colors no-underline"
-                >
-                  Admin
-                </Link>
-              )}
-              <div className="w-px h-4 bg-white/20 mx-1" />
-              {isLoggedIn ? (
-                <LogoutButton />
-              ) : (
-                <Link
-                  href="/login"
-                  className="px-3 py-1.5 border border-amber/50 text-amber hover:bg-amber hover:text-charcoal text-sm tracking-wide transition-colors no-underline rounded-sm"
-                >
-                  Sign In
-                </Link>
-              )}
-            </nav>
-          </div>
-        </header>
+          <div className="page-content">{children}</div>
 
-        <div className="max-w-screen-xl mx-auto px-6 py-8">{children}</div>
-
-        {showSpeedInsights ? <SpeedInsights /> : null}
+          {showSpeedInsights ? <SpeedInsights /> : null}
+        </PrimerProvider>
       </body>
     </html>
   );

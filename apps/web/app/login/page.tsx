@@ -42,20 +42,25 @@ function LoginForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-4 w-full">
+    <form onSubmit={onSubmit} className="form-stack" style={{ width: "100%" }}>
       {error ? (
         <p
           role="alert"
-          className="px-4 py-3 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm rounded-sm"
+          style={{
+            padding: "12px 16px",
+            background: "#fef2f2",
+            borderLeft: "4px solid #dc2626",
+            color: "#b91c1c",
+            fontSize: "0.875rem",
+            borderRadius: "2px",
+            margin: 0,
+          }}
         >
           {error}
         </p>
       ) : null}
 
-      <label
-        className="flex flex-col gap-1.5 text-sm font-semibold tracking-wide"
-        htmlFor="login-email"
-      >
+      <label className="form-label" htmlFor="login-email">
         Email
         <input
           id="login-email"
@@ -64,14 +69,11 @@ function LoginForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border border-charcoal/20 bg-white px-3 py-2.5 text-base font-serif text-charcoal placeholder-charcoal/40 focus:outline-none focus:border-charcoal focus:ring-1 focus:ring-charcoal/30 rounded-sm transition-colors"
+          className="form-input"
         />
       </label>
 
-      <label
-        className="flex flex-col gap-1.5 text-sm font-semibold tracking-wide"
-        htmlFor="login-password"
-      >
+      <label className="form-label" htmlFor="login-password">
         Password
         <input
           id="login-password"
@@ -80,14 +82,15 @@ function LoginForm() {
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border border-charcoal/20 bg-white px-3 py-2.5 text-base font-serif text-charcoal placeholder-charcoal/40 focus:outline-none focus:border-charcoal focus:ring-1 focus:ring-charcoal/30 rounded-sm transition-colors"
+          className="form-input"
         />
       </label>
 
       <button
         type="submit"
         disabled={submitting}
-        className="mt-2 bg-charcoal text-amber font-bold tracking-widest uppercase text-sm py-3 px-6 hover:bg-amber hover:text-charcoal transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer rounded-sm"
+        className="btn-brand"
+        style={{ marginTop: "8px" }}
       >
         {submitting ? "Signing in…" : "Sign In"}
       </button>
@@ -97,25 +100,27 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="flex items-center justify-center min-h-[calc(100svh-4rem)] -my-8 py-12">
-      <div className="bg-white shadow-md border border-charcoal/10 rounded-sm p-10 w-full max-w-sm flex flex-col items-center gap-6">
+    <div className="login-wrapper">
+      <div className="login-card">
         <Image
           src="/images/GeeBees_4inchRoundLabel_wBleed+copy.webp"
           alt="Organizize"
           width={120}
           height={120}
-          className="rounded-full object-contain"
+          style={{ borderRadius: "50%", objectFit: "contain" }}
           priority
         />
-        <div className="text-center">
-          <h1 className="text-2xl font-bold tracking-wide text-charcoal m-0">Welcome back</h1>
-          <p className="text-charcoal/50 text-sm mt-1 m-0">Sign in to your account</p>
+        <div style={{ textAlign: "center" }}>
+          <h1 className="page-title" style={{ fontSize: "1.5rem" }}>
+            Welcome back
+          </h1>
+          <p style={{ color: "rgba(28,37,44,0.5)", fontSize: "0.875rem", margin: "4px 0 0" }}>
+            Sign in to your account
+          </p>
         </div>
-        <div className="w-full">
-          <Suspense>
-            <LoginForm />
-          </Suspense>
-        </div>
+        <Suspense>
+          <LoginForm />
+        </Suspense>
       </div>
     </div>
   );

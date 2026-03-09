@@ -1,5 +1,6 @@
 "use client";
 
+import { SectionCard, StatusBanner } from "@inventory/ui";
 import { useState } from "react";
 
 type UserRow = {
@@ -17,11 +18,6 @@ type Props = {
 };
 
 const ROLES = ["viewer", "operator", "admin"] as const;
-
-const inputClass =
-  "border border-charcoal/20 bg-white px-3 py-2 text-sm font-serif text-charcoal focus:outline-none focus:border-charcoal rounded-sm w-full";
-const labelClass =
-  "flex flex-col gap-1 text-xs font-semibold tracking-widest uppercase text-charcoal/60";
 
 export function AdminUsersClient({ initialUsers, actorId }: Props) {
   const [users, setUsers] = useState<UserRow[]>(initialUsers);
@@ -104,125 +100,112 @@ export function AdminUsersClient({ initialUsers, actorId }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
+    <div className="page-stack">
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div>
-          <h1 className="text-3xl font-bold tracking-wide text-charcoal m-0">User Management</h1>
-          <p className="text-charcoal/60 mt-1 m-0">Manage user accounts and role assignments.</p>
+          <h1 className="page-title">User Management</h1>
+          <p className="page-subtitle">Manage user accounts and role assignments.</p>
         </div>
-        <button
-          type="button"
-          onClick={() => setShowAdd((v) => !v)}
-          className="bg-charcoal text-amber font-bold tracking-widest uppercase text-xs py-2.5 px-5 hover:bg-amber hover:text-charcoal transition-colors cursor-pointer rounded-sm border-0"
-        >
+        <button type="button" onClick={() => setShowAdd((v) => !v)} className="btn-brand">
           {showAdd ? "Cancel" : "+ Add User"}
         </button>
       </div>
 
       {showAdd && (
-        <div className="bg-white border border-charcoal/10 rounded-sm p-5 shadow-sm max-w-md">
-          <h2 className="text-xs font-semibold tracking-widest uppercase text-charcoal/50 m-0 mb-4 pb-2 border-b border-charcoal/8">
-            New User
-          </h2>
-          {addError && (
-            <div className="mb-3 px-3 py-2.5 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm rounded-sm">
-              {addError}
+        <div style={{ maxWidth: "28rem" }}>
+          <SectionCard>
+            <h2 className="section-card-header">New User</h2>
+            <div className="section-card-body form-stack">
+              {addError && <StatusBanner variant="error">{addError}</StatusBanner>}
+              <form onSubmit={handleAdd} className="form-stack">
+                <label className="form-label">
+                  Email
+                  <input
+                    type="email"
+                    required
+                    value={addForm.email}
+                    onChange={(e) => setAddForm((f) => ({ ...f, email: e.target.value }))}
+                    className="form-input"
+                  />
+                </label>
+                <label className="form-label">
+                  Name
+                  <input
+                    type="text"
+                    required
+                    value={addForm.name}
+                    onChange={(e) => setAddForm((f) => ({ ...f, name: e.target.value }))}
+                    className="form-input"
+                  />
+                </label>
+                <label className="form-label">
+                  Password
+                  <input
+                    type="password"
+                    required
+                    value={addForm.password}
+                    onChange={(e) => setAddForm((f) => ({ ...f, password: e.target.value }))}
+                    className="form-input"
+                  />
+                </label>
+                <label className="form-label">
+                  Role
+                  <select
+                    value={addForm.role}
+                    onChange={(e) => setAddForm((f) => ({ ...f, role: e.target.value }))}
+                    className="form-input"
+                  >
+                    {ROLES.map((r) => (
+                      <option key={r} value={r}>
+                        {r}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <button
+                  type="submit"
+                  disabled={addSubmitting}
+                  className="btn-brand"
+                  style={{ marginTop: "4px" }}
+                >
+                  {addSubmitting ? "Creating…" : "Create User"}
+                </button>
+              </form>
             </div>
-          )}
-          <form onSubmit={handleAdd} className="flex flex-col gap-3">
-            <label className={labelClass}>
-              Email
-              <input
-                type="email"
-                required
-                value={addForm.email}
-                onChange={(e) => setAddForm((f) => ({ ...f, email: e.target.value }))}
-                className={inputClass}
-              />
-            </label>
-            <label className={labelClass}>
-              Name
-              <input
-                type="text"
-                required
-                value={addForm.name}
-                onChange={(e) => setAddForm((f) => ({ ...f, name: e.target.value }))}
-                className={inputClass}
-              />
-            </label>
-            <label className={labelClass}>
-              Password
-              <input
-                type="password"
-                required
-                value={addForm.password}
-                onChange={(e) => setAddForm((f) => ({ ...f, password: e.target.value }))}
-                className={inputClass}
-              />
-            </label>
-            <label className={labelClass}>
-              Role
-              <select
-                value={addForm.role}
-                onChange={(e) => setAddForm((f) => ({ ...f, role: e.target.value }))}
-                className={inputClass}
-              >
-                {ROLES.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <button
-              type="submit"
-              disabled={addSubmitting}
-              className="mt-1 bg-charcoal text-amber font-bold tracking-widest uppercase text-xs py-2.5 px-5 hover:bg-amber hover:text-charcoal transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer rounded-sm border-0"
-            >
-              {addSubmitting ? "Creating…" : "Create User"}
-            </button>
-          </form>
+          </SectionCard>
         </div>
       )}
 
       {actionError && (
-        <div className="px-4 py-3 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm rounded-sm max-w-lg">
-          {actionError}
+        <div style={{ maxWidth: "32rem" }}>
+          <StatusBanner variant="error">{actionError}</StatusBanner>
         </div>
       )}
 
-      <div className="bg-white border border-charcoal/10 rounded-sm shadow-sm overflow-hidden">
-        <table className="w-full text-sm">
+      <SectionCard>
+        <table className="data-table">
           <thead>
-            <tr className="bg-charcoal text-white/80">
+            <tr>
               {["Name", "Email", "Role", "Status", "Actions"].map((h) => (
-                <th
-                  key={h}
-                  className="text-left px-4 py-3 text-xs font-semibold tracking-widest uppercase"
-                >
-                  {h}
-                </th>
+                <th key={h}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {users.map((u) => (
-              <tr
-                key={u.id}
-                className={[
-                  "border-t border-charcoal/8",
-                  !u.active ? "opacity-50" : "hover:bg-charcoal/[0.015]",
-                ].join(" ")}
-              >
-                <td className="px-4 py-3 font-medium text-charcoal">{u.name}</td>
-                <td className="px-4 py-3 text-charcoal/60 text-xs font-mono">{u.email}</td>
-                <td className="px-4 py-3">
+              <tr key={u.id} style={{ opacity: u.active ? undefined : 0.5 }}>
+                <td style={{ fontWeight: 500 }}>{u.name}</td>
+                <td className="col-mono" style={{ color: "rgba(28,37,44,0.6)" }}>
+                  {u.email}
+                </td>
+                <td>
                   {editingId === u.id ? (
-                    <span className="flex items-center gap-2">
+                    <span className="actions-row">
                       <select
                         value={editRole}
                         onChange={(e) => setEditRole(e.target.value)}
-                        className="border border-charcoal/20 bg-white px-2 py-1 text-xs font-serif text-charcoal focus:outline-none focus:border-charcoal rounded-sm"
+                        className="form-input"
+                        style={{ width: "auto", padding: "4px 8px", fontSize: "0.75rem" }}
                       >
                         {ROLES.map((r) => (
                           <option key={r} value={r}>
@@ -233,44 +216,42 @@ export function AdminUsersClient({ initialUsers, actorId }: Props) {
                       <button
                         type="button"
                         onClick={() => handleRoleChange(u.id)}
-                        className="text-xs bg-charcoal text-amber hover:bg-amber hover:text-charcoal px-2 py-1 transition-colors cursor-pointer border-0 font-serif rounded-sm"
+                        className="btn-brand"
+                        style={{ fontSize: "0.7rem", padding: "4px 8px" }}
                       >
                         Save
                       </button>
                       <button
                         type="button"
                         onClick={() => setEditingId(null)}
-                        className="text-xs border border-charcoal/30 text-charcoal/60 hover:border-charcoal hover:text-charcoal px-2 py-1 transition-colors cursor-pointer bg-transparent font-serif rounded-sm"
+                        className="btn-outline"
+                        style={{ fontSize: "0.7rem" }}
                       >
                         Cancel
                       </button>
                     </span>
                   ) : (
                     <span
-                      className={[
-                        "inline-block px-2 py-0.5 text-xs font-semibold tracking-widest uppercase rounded-sm",
-                        u.role === "admin"
-                          ? "bg-amber text-charcoal"
-                          : "bg-charcoal/8 text-charcoal/70",
-                      ].join(" ")}
+                      className={`badge ${u.role === "admin" ? "badge-role-admin" : "badge-role-other"}`}
                     >
                       {u.role}
                     </span>
                   )}
                 </td>
-                <td className="px-4 py-3">
+                <td>
                   <span
-                    className={[
-                      "text-xs font-semibold",
-                      u.active ? "text-green-700" : "text-charcoal/40",
-                    ].join(" ")}
+                    style={{
+                      fontSize: "0.75rem",
+                      fontWeight: 600,
+                      color: u.active ? "#15803d" : "rgba(28,37,44,0.4)",
+                    }}
                   >
                     {u.active ? "Active" : "Inactive"}
                   </span>
                 </td>
-                <td className="px-4 py-3">
+                <td>
                   {u.active && editingId !== u.id && (
-                    <div className="flex items-center gap-2">
+                    <div className="actions-row">
                       <button
                         type="button"
                         onClick={() => {
@@ -278,7 +259,7 @@ export function AdminUsersClient({ initialUsers, actorId }: Props) {
                           setEditRole(u.role);
                           setActionError(null);
                         }}
-                        className="text-xs border border-charcoal/30 text-charcoal/70 hover:border-charcoal hover:text-charcoal px-3 py-1.5 transition-colors cursor-pointer bg-transparent font-serif rounded-sm"
+                        className="btn-outline"
                       >
                         Edit Role
                       </button>
@@ -286,7 +267,7 @@ export function AdminUsersClient({ initialUsers, actorId }: Props) {
                         <button
                           type="button"
                           onClick={() => handleDeactivate(u.id)}
-                          className="text-xs border border-red-300 text-red-600 hover:bg-red-600 hover:text-white hover:border-red-600 px-3 py-1.5 transition-colors cursor-pointer bg-transparent font-serif rounded-sm"
+                          className="btn-danger-outline"
                         >
                           Deactivate
                         </button>
@@ -298,7 +279,7 @@ export function AdminUsersClient({ initialUsers, actorId }: Props) {
             ))}
           </tbody>
         </table>
-      </div>
+      </SectionCard>
     </div>
   );
 }
