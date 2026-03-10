@@ -12,7 +12,7 @@ export function FilterToolbar({ children, "aria-label": ariaLabel }: FilterToolb
       style={{
         backgroundColor: "white",
         border: "1px solid rgba(28, 37, 44, 0.1)",
-        borderRadius: "4px",
+        borderRadius: "8px",
         padding: "16px",
         display: "flex",
         flexWrap: "wrap",

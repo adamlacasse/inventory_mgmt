@@ -54,6 +54,7 @@ export function InventoryPageView({
         <StatusBanner variant="success">All lots are above the low-stock threshold.</StatusBanner>
       )}
 
+      <div className="filter-table-group">
       <FilterToolbar aria-label="Inventory filters">
         <div className="filter-field">
           <label className="form-label" htmlFor="inventory-filter-product-name">
@@ -165,6 +166,7 @@ export function InventoryPageView({
           </table>
         </div>
       )}
+      </div>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { NavLinks } from "../src/components/NavLinks";
 import { PrimerProvider } from "../src/components/PrimerProvider";
 import { LogoutButton } from "../src/modules/auth/LogoutButton";
 import { getSession } from "../src/server/auth";
@@ -51,24 +52,8 @@ export default async function RootLayout({
               </div>
 
               <nav className="app-nav" aria-label="Primary">
-                <Link href="/" className="nav-link">
-                  Home
-                </Link>
-                <Link href="/products" className="nav-link">
-                  Products
-                </Link>
-                <Link href="/intake" className="nav-link">
-                  Intake
-                </Link>
-                <Link href="/outtake" className="nav-link">
-                  Outtake
-                </Link>
-                <Link href="/inventory" className="nav-link">
-                  Inventory
-                </Link>
-                <Link href="/history" className="nav-link">
-                  History
-                </Link>
+                <NavLinks />
+                <span className="nav-divider" aria-hidden="true" />
                 <a href="/api/reports/inventory" className="nav-link">
                   Export CSV
                 </a>

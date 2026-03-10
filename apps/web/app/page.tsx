@@ -56,6 +56,7 @@ export default function HomePage() {
                 <div className="module-card-label">{label}</div>
                 <div className="module-card-desc">{description}</div>
               </div>
+              <span className="module-card-arrow" aria-hidden="true">→</span>
             </div>
           </a>
         ))}

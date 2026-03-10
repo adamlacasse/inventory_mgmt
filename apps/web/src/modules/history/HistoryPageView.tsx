@@ -94,6 +94,7 @@ export function HistoryPageView() {
       {error ? <StatusBanner variant="error">{error}</StatusBanner> : null}
       {message ? <StatusBanner variant="success">{message}</StatusBanner> : null}
 
+      <div className="filter-table-group">
       <FilterToolbar aria-label="History filters">
         <h2
           className="section-card-header"
@@ -149,7 +150,7 @@ export function HistoryPageView() {
 
       {!loading && transactions.length > 0 ? (
         <div
-          style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+          style={{ display: "flex", flexDirection: "column", gap: "12px" }}
           aria-label="Transactions list"
         >
           {transactions.map((transaction) => (
@@ -203,7 +204,6 @@ export function HistoryPageView() {
                       type="button"
                       onClick={() => void setLockState(transaction, true)}
                       className="btn-brand"
-                      style={{ fontSize: "0.75rem", padding: "6px 12px" }}
                     >
                       Lock
                     </button>
@@ -278,6 +278,7 @@ export function HistoryPageView() {
           ))}
         </div>
       ) : null}
+      </div>
     </div>
   );
 }

@@ -10,11 +10,18 @@
 /* ── Override Primer page background to brand cream ───────── */
 body {
   background-color: var(--color-org-cream) !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* ── Brand serif for page headings ───────────────────────── */
 h1 {
   font-family: "Cormorant Infant", Georgia, serif;
+  font-size: 2.25rem;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 /* ── App shell header ─────────────────────────────────────── */
@@ -62,22 +69,29 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
 }
 
 .nav-link {
   display: inline-block;
   padding: 6px 12px;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.6);
   font-size: 0.875rem;
-  letter-spacing: 0.05em;
+  font-weight: 500;
+  letter-spacing: 0.04em;
   text-decoration: none;
   border-radius: 4px;
   transition: color 0.15s;
 }
 
 .nav-link:hover {
-  color: var(--color-org-amber);
+  color: rgba(255, 255, 255, 0.95);
+  text-decoration: none;
+}
+
+.nav-link-active {
+  color: var(--color-org-amber) !important;
+  box-shadow: inset 0 -2px 0 var(--color-org-amber);
 }
 
 .nav-link-signin {
@@ -119,8 +133,9 @@ h1 {
   font-size: 0.75rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 10px 20px;
-  border-radius: 4px;
+  padding: 8px 18px;
+  line-height: 1.4;
+  border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.15s, color 0.15s;
   font-family: inherit;
@@ -145,8 +160,9 @@ h1 {
   color: rgba(28, 37, 44, 0.7);
   border: 1px solid rgba(28, 37, 44, 0.3);
   font-size: 0.75rem;
-  padding: 6px 12px;
-  border-radius: 4px;
+  padding: 8px 14px;
+  line-height: 1.4;
+  border-radius: 6px;
   cursor: pointer;
   transition: border-color 0.15s, color 0.15s;
   font-family: inherit;
@@ -165,8 +181,9 @@ h1 {
   color: #dc2626;
   border: 1px solid #fca5a5;
   font-size: 0.75rem;
-  padding: 6px 12px;
-  border-radius: 4px;
+  padding: 8px 14px;
+  line-height: 1.4;
+  border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.15s, color 0.15s, border-color 0.15s;
   font-family: inherit;
@@ -187,7 +204,7 @@ h1 {
   border: 1px dashed rgba(28, 37, 44, 0.3);
   font-size: 0.875rem;
   padding: 8px 16px;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   transition: border-color 0.15s, color 0.15s;
   font-family: inherit;
@@ -236,7 +253,7 @@ h1 {
 .section-card {
   background-color: white;
   border: 1px solid rgba(28, 37, 44, 0.1);
-  border-radius: 4px;
+  border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
@@ -244,12 +261,12 @@ h1 {
 .section-card-header {
   padding: 12px 20px;
   border-bottom: 1px solid rgba(28, 37, 44, 0.08);
-  background-color: rgba(28, 37, 44, 0.02);
+  background-color: rgba(28, 37, 44, 0.05);
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(28, 37, 44, 0.5);
+  color: rgba(28, 37, 44, 0.75);
   margin: 0;
 }
 
@@ -288,7 +305,7 @@ h1 {
   padding: 8px 12px;
   font-size: 0.875rem;
   color: var(--color-org-charcoal);
-  border-radius: 4px;
+  border-radius: 6px;
   width: 100%;
   font-family: inherit;
   transition: border-color 0.15s, box-shadow 0.15s;
@@ -342,7 +359,7 @@ h1 {
 }
 
 .data-table tbody tr.row-odd {
-  background-color: rgba(28, 37, 44, 0.02);
+  background-color: rgba(28, 37, 44, 0.035);
 }
 
 .data-table tbody tr.row-low-stock {
@@ -374,7 +391,7 @@ h1 {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  border-radius: 4px;
+  border-radius: 9999px;
 }
 
 .badge-low-stock {
@@ -440,7 +457,7 @@ h1 {
   display: block;
   background-color: white;
   border: 1px solid rgba(28, 37, 44, 0.1);
-  border-radius: 4px;
+  border-radius: 8px;
   padding: 20px;
   text-decoration: none;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -458,6 +475,20 @@ h1 {
   gap: 12px;
 }
 
+.module-card-arrow {
+  margin-left: auto;
+  font-size: 1rem;
+  color: rgba(28, 37, 44, 0.25);
+  transition: color 0.15s, transform 0.15s;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.module-card:hover .module-card-arrow {
+  color: var(--color-org-amber);
+  transform: translateX(3px);
+}
+
 .module-card-icon {
   font-size: 1.5rem;
   line-height: 1;
@@ -465,9 +496,10 @@ h1 {
 }
 
 .module-card-label {
+  font-size: 1rem;
   font-weight: 700;
   color: var(--color-org-charcoal);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   transition: color 0.15s;
 }
 
@@ -496,7 +528,7 @@ h1 {
   background-color: white;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(28, 37, 44, 0.1);
-  border-radius: 4px;
+  border-radius: 8px;
   padding: 40px;
   width: 100%;
   max-width: 380px;
@@ -520,7 +552,9 @@ h1 {
 
 .page-subtitle {
   color: rgba(28, 37, 44, 0.6);
-  margin: 4px 0 0;
+  margin: 6px 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
 }
 
 .form-stack {
@@ -583,4 +617,11 @@ h1 {
   gap: 6px;
   flex: 1;
   min-width: 144px;
+}
+
+/* Wraps a FilterToolbar + its data table so they feel like one block */
+.filter-table-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
