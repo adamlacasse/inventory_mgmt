@@ -2,7 +2,17 @@
 
 ## Status
 
-Proposed — March 8, 2026
+In progress — Phase 6 verification pending (March 9, 2026)
+
+### Phase completion as of March 9, 2026
+
+- [x] Phase 0: Baseline and guardrails — skipped (no baseline screenshots captured; migration proceeded directly)
+- [x] Phase 1: Primer foundation setup — `@primer/react` installed, `PrimerProvider` wrapping app root in `layout.tsx`
+- [x] Phase 2: Shared UI primitives in `packages/ui` — `PageFrame`, `SectionCard`, `StatusBadge`, `StatusBanner`, `FilterToolbar`, `EmptyState` all present
+- [x] Phase 3: Low-risk screen migration — all read-focused modules (`inventory`, `products`, `history`) import from `@inventory/ui`
+- [x] Phase 4: Compliance-sensitive workflow migration — `intake`, `outtake`, and admin screens migrated
+- [x] Phase 5: Tailwind and shadcn cleanup — no Tailwind CDN, no shadcn artifacts, no `tailwind.config` remaining
+- [ ] Phase 6: Verification and PR evidence — quality gates not yet re-run after migration
 
 ## Summary
 
@@ -271,17 +281,17 @@ Required PR evidence:
 
 Use this checklist before calling the migration done:
 
-- [ ] Primer root setup is active in `apps/web/app/layout.tsx`
-- [ ] Shared UI wrappers exist in `packages/ui`
-- [ ] Home, login, inventory, products, history, intake, outtake, and admin screens use the new system
-- [ ] `packages/ui` contains no business logic
-- [ ] Tailwind CDN script is gone
-- [ ] Inline Tailwind config is gone
-- [ ] Tailwind config and PostCSS config are removed if no longer needed
-- [ ] shadcn config is removed
-- [ ] shadcn component files are removed
-- [ ] Temporary Tailwind helper utilities are removed
-- [ ] `rg` finds no meaningful Tailwind or shadcn leftovers
+- [x] Primer root setup is active in `apps/web/app/layout.tsx`
+- [x] Shared UI wrappers exist in `packages/ui`
+- [x] Home, login, inventory, products, history, intake, outtake, and admin screens use the new system
+- [x] `packages/ui` contains no business logic
+- [x] Tailwind CDN script is gone
+- [x] Inline Tailwind config is gone
+- [x] Tailwind config and PostCSS config are removed if no longer needed
+- [x] shadcn config is removed
+- [x] shadcn component files are removed
+- [x] Temporary Tailwind helper utilities are removed
+- [x] `rg` finds no meaningful Tailwind or shadcn leftovers
 - [ ] Quality gates are green
 
 ## Risks To Watch
