@@ -15,6 +15,7 @@
     "react": ">=19.0.0"
   },
   "devDependencies": {
+    "@primer/react": "38.14.0",
     "@types/react": "19.0.8"
   }
 }

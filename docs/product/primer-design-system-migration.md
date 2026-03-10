@@ -2,7 +2,7 @@
 
 ## Status
 
-In progress — Phase 6 verification pending (March 9, 2026)
+Complete — March 10, 2026
 
 ### Phase completion as of March 9, 2026
 
@@ -12,7 +12,7 @@ In progress — Phase 6 verification pending (March 9, 2026)
 - [x] Phase 3: Low-risk screen migration — all read-focused modules (`inventory`, `products`, `history`) import from `@inventory/ui`
 - [x] Phase 4: Compliance-sensitive workflow migration — `intake`, `outtake`, and admin screens migrated
 - [x] Phase 5: Tailwind and shadcn cleanup — no Tailwind CDN, no shadcn artifacts, no `tailwind.config` remaining
-- [ ] Phase 6: Verification and PR evidence — quality gates not yet re-run after migration
+- [x] Phase 6: Verification and PR evidence — all quality gates green (lint, typecheck, test, test:e2e)
 
 ## Summary
 
@@ -292,7 +292,7 @@ Use this checklist before calling the migration done:
 - [x] shadcn component files are removed
 - [x] Temporary Tailwind helper utilities are removed
 - [x] `rg` finds no meaningful Tailwind or shadcn leftovers
-- [ ] Quality gates are green
+- [x] Quality gates are green
 
 ## Risks To Watch
 

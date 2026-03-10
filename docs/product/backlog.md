@@ -31,10 +31,10 @@ MVP is shippable when all of the following remain true on the current branch:
 - [x] Branding and navigation updates (TASK-027, TASK-030)
 - [x] Low stock alerts on inventory view (TASK-033)
 
-## Remaining Near-Term
+## Delivered Near-Term
 
-- [ ] Primer design system migration and Tailwind/shadcn cleanup (TASK-036)
-- [ ] Release automation hardening: CI + deploy migration health (TASK-001, TASK-025, TASK-026)
+- [x] Primer design system migration and Tailwind/shadcn cleanup (TASK-036)
+- [x] Release automation hardening: CI + deploy migration health (TASK-001, TASK-025, TASK-026)
 
 ## Deferred / Later
 
